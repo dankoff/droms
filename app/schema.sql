@@ -1,0 +1,66 @@
+DROP TABLE IF EXISTS order;
+DROP TABLE IF EXISTS table;
+DROP TABLE IF EXISTS orderDetails;
+DROP TABLE IF EXISTS item;
+DROP TABLE IF EXISTS section;
+DROP TABLE IF EXISTS menu;
+DROP TABLE IF EXISTS staff;
+DROP TABLE IF EXISTS workPlace;
+DROP TABLE IF EXISTS restaurant;
+
+CREATE TABLE staff (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  type TEXT NOT NULL,
+  FOREIGN KEY (workPlace) REFERENCES workPlace (name)
+);
+
+CREATE TABLE workPlace (
+  name TEXT PRIMARY KEY,
+  FOREIGN KEY (restName) REFERENCES restaurant (name)
+);
+
+CREATE TABLE order (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  totalCost REAL NOT NULL,
+  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (tableNo) REFERENCES table (tableNo)
+);
+
+CREATE TABLE item (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL,
+  cost REAL NOT NULL,
+  addOn TEXT NOT NULL,
+  FOREIGN KEY (section) REFERENCES section (name)
+);
+
+CREATE TABLE orderDetails (
+  FOREIGN KEY (itemId) REFERENCES item (id),
+  FOREIGN KEY (orderId) REFERENCES order (id),
+  PRIMARY KEY (itemId, orderId),
+  quantity INTEGER NOT NULL
+);
+
+CREATE TABLE section (
+  name TEXT PRIMARY KEY,
+  description TEXT NOT NULL,
+  FOREIGN KEY (menu) REFERENCES menu (name)
+);
+
+CREATE TABLE menu (
+  name TEXT PRIMARY KEY,
+  description TEXT NOT NULL,
+  FOREIGN KEY (restName) REFERENCES restaurant (name)
+);
+
+CREATE TABLE restaurant (
+  name TEXT PRIMARY KEY,
+  contact TEXT NOT NULL
+);
+
+CREATE TABLE table (
+  tableNo INTEGER PRIMARY KEY AUTOINCREMENT,
+  noOfSeats INTEGER NOT NULL,
+  FOREIGN KEY (restName) REFERENCES restaurant (name)
+);
