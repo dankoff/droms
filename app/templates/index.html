@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Menu{% endblock %}</h1>
+  <nav>
+    <ul>
+      <li><a class="action" href="{{ url_for('menu.add_item') }}">Add Item</a>
+      <li><a class="action" href="{{ url_for('menu.add_section') }}">Add Section</a>
+    </ul>
+  </nav>
+  <hr>
+{% endblock %}
+
+{% block content %}
+
+  {% for item in items %}
+    <article class="item">
+      <header>
+        <div>
+          <h1>{{ item['section'] }}</h1>
+          <h1>{{ item['name'] }}</h1>
+          <p class="body"><i>{{ item['description'] }}</i></p>
+        </div>
+      </header>
+      <p class="body">Cost: {{ "£%.2f"|format(item['cost']) }}</p>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+
+{% endblock %}

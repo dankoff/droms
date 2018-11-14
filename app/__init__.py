@@ -27,4 +27,8 @@ def make_app(test_config=None):
     from . import db
     db.init_app(app)
 
+    # register menu blueprint
+    from . import menu
+    app.register_blueprint(menu.bp)
+
     return app
