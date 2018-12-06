@@ -12,21 +12,23 @@
 {% endblock %}
 
 {% block content %}
-
-  {% for item in items %}
+  </br>
+  {% for s, items in items_by_section.items() %}
     <article class="item">
       <header>
         <div>
-          <h1>{{ item['section'] }}</h1>
-          <h1>{{ item['name'] }}</h1>
-          <p class="body"><i>{{ item['description'] }}</i></p>
+          <h1>{{ s[0] }}</h1>
+          <p class="body"><i>{{ s[1] }}</i></p>
+          <hr>
         </div>
       </header>
-      <p class="body">Cost: {{ "£%.2f"|format(item['cost']) }}</p>
+      {% for i in items %}
+        <div>
+          <h4>{{ i['name'] }} - {{ "£%.2f"|format(i['cost']) }}</h4>
+          <p class="body"><i>{{ i['description'] }}</i></p>
+        </div>
+      {% endfor %}
     </article>
-    {% if not loop.last %}
-      <hr>
-    {% endif %}
   {% endfor %}
 
 {% endblock %}
