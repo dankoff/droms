@@ -9,42 +9,49 @@ bp = Blueprint('menu', __name__)
 
 @bp.route('/')
 def index():
-    sections = util.get_all_sections()
-    section_names_desc = [ (s['name'], s['description']) for s in sections ]
-    items_by_section = {}
-    for s in section_names_desc:
-        items_by_section[s] = util.get_items_by_section(s[0])
+    menu_data = util.get_menus_data()
+    return render_template('index.html', menu_data=menu_data)
 
-    return render_template('index.html', items_by_section=items_by_section)
-
-@bp.route('/add_section', methods=('GET', 'POST'))
-def add_section():
+@bp.route('/<menu>/add_section', methods=('GET', 'POST'))
+def add_section(menu):
     ''' adds a new menu section '''
     if request.method == 'POST':
         name = request.form['name']
         desc = request.form['description']
-        error = None
 
-        if not name:
-            error = "Name is required."
+        db = get_db()
+        db.execute(
+            'INSERT INTO section (name, description, menu)'
+            ' VALUES (?,?,?)',
+            (name, desc, menu)
+        )
+        db.commit()
+        return redirect( url_for('menu.index') )
+    return render_template( 'add_section.html', menu=menu )
 
-        if error is not None:
-            flash(error)
+@bp.route('/<menu>/edit_section', methods=('GET', 'POST'))
+def edit_section(menu):
+    ''' edits/deletes an existing menu section '''
+    sections = { s['name'] : s['description'] for s in \
+                 util.get_sections_by_menu(menu)
+               }
+    if request.method == 'POST':
+        name = request.form['name']
+        desc = request.form['description']
+        section = request.form['section']
+
+        if request.form['action'] == 'Delete':
+            util.delete_section(section, menu)
         else:
-            db = get_db()
-            db.execute(
-                'INSERT INTO section (name, description, menu)'
-                ' VALUES (?,?,"Main Menu")',
-                (name, desc)
-            )
-            db.commit()
-            return redirect( url_for('menu.index') )
-    return render_template( 'add_section.html' )
+            util.edit_section(name, desc, section, menu)
 
-@bp.route('/add_item', methods=('GET', 'POST'))
-def add_item():
+        return redirect( url_for('menu.index') )
+    return render_template( 'edit_section.html', sections=sections, menu=menu )
+
+@bp.route('/<menu>/add_item', methods=('GET', 'POST'))
+def add_item(menu):
     ''' adds a new menu item to the database '''
-    sections = util.get_all_sections()
+    sections = [ s['name'] for s in util.get_sections_by_menu(menu) ]
     if request.method == 'POST':
         name = request.form['name']
         desc = request.form['description']
@@ -62,10 +69,14 @@ def add_item():
         else:
             db = get_db()
             db.execute(
-                'INSERT INTO item (name, description, cost, section)'
-                ' VALUES (?,?,?,?)',
-                (name, desc, cost, section)
+                'INSERT INTO item (name, description, cost, section, menu)'
+                ' VALUES (?,?,?,?,?)',
+                (name, desc, cost, section, menu)
             )
             db.commit()
             return redirect( url_for('menu.index') )
-    return render_template( 'add_item.html', sections=sections )
+    return render_template( 'add_item.html', sections=sections, menu=menu )
+
+@bp.route('/<menu>/edit_item', methods=('GET', 'POST'))
+def edit_item(menu):
+    return render_tempate( 'edit_item.html' )

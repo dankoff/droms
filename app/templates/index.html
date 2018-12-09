@@ -1,34 +1,42 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Menu{% endblock %}</h1>
-  <nav>
-    <ul>
-      <li><a class="action" href="{{ url_for('menu.add_item') }}">Add Item</a>
-      <li><a class="action" href="{{ url_for('menu.add_section') }}">Add Section</a>
-    </ul>
-  </nav>
-  <hr>
+  <h1>{% block title %}Home{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
   </br>
-  {% for s, items in items_by_section.items() %}
-    <article class="item">
-      <header>
-        <div>
-          <h1>{{ s[0] }}</h1>
-          <p class="body"><i>{{ s[1] }}</i></p>
-          <hr>
-        </div>
-      </header>
-      {% for i in items %}
-        <div>
-          <h4>{{ i['name'] }} - {{ "£%.2f"|format(i['cost']) }}</h4>
-          <p class="body"><i>{{ i['description'] }}</i></p>
-        </div>
-      {% endfor %}
-    </article>
+  {% for m, data in menu_data.items() %}
+    <h2>{{ m[0] }}</h2>
+    <p><i>{{ m[1] }}</i></p>
+    <nav>
+      <ul>
+        <li><a class="left" href="{{ url_for('menu.add_item', menu=m[0]) }}">Add Item</a>
+        <li><a class="left" href="{{ url_for('menu.add_section', menu=m[0]) }}">Add Section</a>
+        <li><a class="right" href="{{ url_for('menu.edit_item', menu=m[0]) }}">Edit Item</a>
+        <li><a class="right" href="{{ url_for('menu.edit_section', menu=m[0]) }}">Edit Section</a>
+      </ul>
+    </nav>
+    {% for s, items in data.items() %}
+      <article class="item">
+        <header>
+          <div>
+            <hr>
+            <h1>{{ s[0] }}</h1>
+            <p><i>{{ s[1] }}</i></p>
+            <hr>
+          </div>
+        </header>
+        {% for i in items %}
+          <div>
+            <h4>{{ i['name'] }} - {{ "£%.2f"|format(i['cost']) }}</h4>
+            <p><i>{{ i['description'] }}</i></p>
+          </div>
+        {% endfor %}
+      </article>
+    {% endfor %}
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
   {% endfor %}
-
 {% endblock %}

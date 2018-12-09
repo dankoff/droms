@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Add New Item{% endblock %}</h1>
+  <h1>{% block title %}Add New Item - {{ menu }}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -19,7 +19,7 @@
     <label for="section">Section</label>
     <select name="section" id="section">
       {% for s in sections %}
-        <option value="{{ s['name'] }}">{{ s['name'] }}</option>
+        <option value="{{ s }}">{{ s }}</option>
       {% endfor %}
     </select>
     </br>

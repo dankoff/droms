@@ -35,7 +35,8 @@ CREATE TABLE item (
   description TEXT NOT NULL,
   cost REAL NOT NULL,
   section TEXT NOT NULL,
-  FOREIGN KEY (section) REFERENCES section (name)
+  menu TEXT NOT NULL,
+  FOREIGN KEY (section, menu) REFERENCES section (name, menu)
 );
 
 CREATE TABLE orderDetails (
@@ -48,10 +49,11 @@ CREATE TABLE orderDetails (
 );
 
 CREATE TABLE section (
-  name TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
   description TEXT NOT NULL,
   menu TEXT NOT NULL,
-  FOREIGN KEY (menu) REFERENCES menu (name)
+  FOREIGN KEY (menu) REFERENCES menu (name),
+  PRIMARY KEY (name, menu)
 );
 
 CREATE TABLE menu (
