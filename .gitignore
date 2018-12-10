@@ -12,6 +12,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Commands text file
+commands.txt
+
 # C extensions
 *.so
 
