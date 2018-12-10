@@ -51,7 +51,7 @@ def get_section_by_name_and_menu(name, menu):
         (name, menu)
     ).fetchone()
     if section is None:
-        abort( 404, "Section {0} in menu {1} not found".format(name, menu))
+        abort( 404, "Section {0} not found in {1}".format(name, menu) )
     return section
 
 def get_items_by_section_and_menu(section, menu):
@@ -62,6 +62,17 @@ def get_items_by_section_and_menu(section, menu):
         ' ORDER BY cost ASC',
         (section, menu)
     ).fetchall()
+    if items is None:
+        abort( 404, "No items found in section {0}, {1}".format(section, menu) )
+    return items
+
+def get_items_by_menu(menu):
+    items = get_db().execute(
+        'SELECT id, name, description, cost, section'
+        ' FROM item WHERE menu=?', (menu,)
+    ).fetchall()
+    if items is None:
+        abort( 404, "No items found in {0}".format(menu) )
     return items
 
 def get_menus():
@@ -69,6 +80,25 @@ def get_menus():
         'SELECT name, description FROM menu'
     ).fetchall()
     return menus
+
+def edit_item(id, name, desc, cost, section):
+    ''' updates a given item in the database '''
+    db = get_db()
+    db.execute(
+        'UPDATE item SET name=?, description=?,'
+        ' cost=?, section=?'
+        ' WHERE id=?',
+        (name, desc, cost, section, id)
+    )
+    db.commit()
+
+def delete_item(id):
+    ''' deletes an item in the database given its id '''
+    db = get_db()
+    db.execute(
+        'DELETE FROM item WHERE id=?', (id,)
+    )
+    db.commit()
 
 def edit_section(name, desc, section, menu):
     ''' updates a given section in the database '''

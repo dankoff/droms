@@ -57,26 +57,41 @@ def add_item(menu):
         desc = request.form['description']
         cost = request.form['cost']
         section = request.form['section']
-        error = None
 
-        if not name:
-            error = 'Name is required.'
-        if not cost:
-            error = 'Cost is required.'
-
-        if error is not None:
-            flash(error)
-        else:
-            db = get_db()
-            db.execute(
-                'INSERT INTO item (name, description, cost, section, menu)'
-                ' VALUES (?,?,?,?,?)',
-                (name, desc, cost, section, menu)
-            )
-            db.commit()
-            return redirect( url_for('menu.index') )
+        db = get_db()
+        db.execute(
+            'INSERT INTO item (name, description, cost, section, menu)'
+            ' VALUES (?,?,?,?,?)',
+            (name, desc, cost, section, menu)
+        )
+        db.commit()
+        return redirect( url_for('menu.index') )
     return render_template( 'add_item.html', sections=sections, menu=menu )
 
 @bp.route('/<menu>/edit_item', methods=('GET', 'POST'))
 def edit_item(menu):
-    return render_tempate( 'edit_item.html' )
+    ''' edits/deletes the given item from the menu '''
+    items = util.get_items_by_menu(menu)
+    sections = [ s['name'] for s in util.get_sections_by_menu(menu) ]
+    items_by_id = {}
+    for i in items:
+        items_by_id[ str(i['id']) ] = {
+            'name': i['name'], 'description': i['description'],
+            'cost': i['cost'], 'section': i['section']
+        }
+
+    if request.method == 'POST':
+        id = request.form['item']
+        name = request.form['name']
+        desc = request.form['description']
+        cost = request.form['cost']
+        section = request.form['section']
+
+        if request.form['action'] == 'Delete':
+            util.delete_item(id)
+        else:
+            util.edit_item(id, name, desc, cost, section)
+
+        return redirect( url_for('menu.index') )
+    return render_template( 'edit_item.html', items=items_by_id,
+                            sections=sections, menu=menu )
