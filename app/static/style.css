@@ -1,8 +1,7 @@
 html { font-family: sans-serif; background: #eee; padding: 1rem; }
 body { max-width: 960px; margin: 0 auto; background: white; }
-h1 { font-family: helvetica; color: #377ba8; margin: 1rem 0; }
-h2 { font-family: helvetica; color: black; margin: 1rem 0; }
-a { color: #377ba8; }
+h1, h2 { font-family: helvetica; color: #377ba8; margin: 1rem 0; }
+a { color: black; }
 hr { border: none; border-top: 1px solid lightgray; }
 nav { display: flex; align-items: center; padding: 0 0.5rem; }
 nav h1 { flex: auto; margin: 0; }
@@ -10,6 +9,7 @@ nav ul { display: flex; list-style: none; margin: 0; padding: 0; }
 nav ul li a { display: block; padding: 0.5rem; }
 nav ul li a .left { float: left; }
 nav ul li a .right { float: right; }
+.italic { font-style: italic; }
 .content { padding: 0 1rem 1rem; }
 .content > header { display: flex; align-items: flex-end; }
 .content > header h1 { flex: auto; margin: 1rem 0 0.25rem 0; }
@@ -23,5 +23,7 @@ nav ul li a .right { float: right; }
 .content label { font-weight: bold; margin-bottom: 0.5em; }
 .content input, .content textarea { margin-bottom: 1em; }
 .content textarea { min-height: 12em; resize: vertical; }
+.centre { margin-left: auto; margin-right: auto; }
 input.danger { color: #cc2f2e; }
 input[type=submit] { align-self: start; min-width: 10em; }
+.buttons { position: relative; display: inline-block; cursor: pointer; padding-top: 30px; margin-right: 60px; }

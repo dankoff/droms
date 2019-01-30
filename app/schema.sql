@@ -10,6 +10,8 @@ DROP TABLE IF EXISTS restaurant;
 
 CREATE TABLE staff (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL,
   type TEXT NOT NULL,
   workPlace TEXT NOT NULL,
   FOREIGN KEY (workPlace) REFERENCES workPlace (name)
@@ -23,6 +25,7 @@ CREATE TABLE workPlace (
 
 CREATE TABLE custOrder (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  custIP TEXT NOT NULL,
   totalCost REAL NOT NULL,
   tableNo INTEGER NOT NULL,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -36,10 +39,12 @@ CREATE TABLE item (
   cost REAL NOT NULL,
   section TEXT NOT NULL,
   menu TEXT NOT NULL,
+  diet TEXT,
+  spicy TEXT,
   FOREIGN KEY (section, menu) REFERENCES section (name, menu)
 );
 
-CREATE TABLE orderDetails (
+CREATE TABLE orderDetail (
   itemId INTEGER NOT NULL,
   orderId INTEGER NOT NULL,
   quantity INTEGER NOT NULL,

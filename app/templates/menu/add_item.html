@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block header %}
+  <h1>{% block title %}Add New Item - {{ menu }}{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+  <form method="post">
+    <label for="name">Name</label>
+    <input name="name" id="name" value="{{ request.form['name'] }}" required>
+    <br>
+    <label for="description">Description</label>
+    <textarea name="description" id="description">{{ request.form['description'] }}</textarea>
+    <br>
+    <label for="cost">Cost</label>
+    <input type="number" name="cost" id="cost" step="0.01" min="0" value="{{ request.form['cost'] }}" required>
+    <br>
+    <label for="section">Section</label>
+    <select name="section" id="section">
+      {% for s in sections %}
+        <option value="{{ s }}">{{ s }}</option>
+      {% endfor %}
+    </select>
+    <label for="diet">Diet</label>
+    <select name="diet" id="diet">
+      <option value="">None</option>
+      <option value="Vegetarian">Vegetarian</option>
+      <option value="Vegan">Vegan</option>
+    </select>
+    <label for="spicy">Spicy</label>
+    <select name="spicy" id="spicy">
+      <option value="">Plain</option>
+      <option value="Mild">Mild</option>
+      <option value="Medium">Medium</option>
+      <option value="Hot">Hot</option>
+    </select>
+    </br>
+    <input type="submit" value="Save">
+  </form>
+
+{% endblock %}

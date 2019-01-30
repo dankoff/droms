@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
 {% block header %}
   <h1>{% block title %}Edit Item - {{ menu }}{% endblock %}</h1>
 {% endblock %}
@@ -8,7 +12,7 @@
 
   <form method="post">
     <label for="item">Item</label>
-    <select name="item" id="item" onchange="fillDetails(this.value)" required>
+    <select name="item" id="item" required>
       <option value="">Choose an item</option>
       {% for item_id, data in items.items() %}
         <option value="{{ item_id }}">{{ data['name'] }}</option>
@@ -30,6 +34,21 @@
       {% endfor %}
     </select>
     </br>
+    <label for="diet">Diet</label>
+    <select name="diet" id="diet">
+      <option value="">None</option>
+      <option value="Vegetarian">Vegetarian</option>
+      <option value="Vegan">Vegan</option>
+    </select>
+    </br>
+    <label for="spicy">Spicy</label>
+    <select name="spicy" id="spicy">
+      <option value="">Plain</option>
+      <option value="Mild">Mild</option>
+      <option value="Medium">Medium</option>
+      <option value="Hot">Hot</option>
+    </select>
+    </br>
     <div>
       <input type="submit" style="float: left;" value="Save" name="action"
         onclick="return confirm('Are you sure you want to save the changes?');">
@@ -40,21 +59,35 @@
   </form>
 
   <script type="text/javascript">
-    function fillDetails(item_id) {
-      var name = document.getElementById("name");
+      var itemList = document.getElementById("item");
+      var itemName = document.getElementById("name");
       var desc = document.getElementById("description");
       var cost = document.getElementById("cost");
       var section = document.getElementById("section");
+      var diet = document.getElementById("diet");
+      var spicy = document.getElementById("spicy");
       var data = {{ items|tojson }};
-      data[""] = { 'name': "", 'description': "",
-                   'cost': "" };
+      itemList.addEventListener('change', function(){
+          var item_id = itemList.value;
+          data[""] = { 'name': "", 'description': "",
+                       'cost': "", 'diet': "", "spicy": "" };
 
-      name.value = data[item_id].name;
-      desc.value = data[item_id].description;
-      cost.value = data[item_id].cost;
-      if (item_id != "") {
-        section.value = data[item_id].section;
-      }
-    }
+          itemName.value = data[item_id].name;
+          desc.value = data[item_id].description;
+          cost.value = data[item_id].cost;
+          if (item_id) {
+            section.value = data[item_id].section;
+          }
+          if (!data[item_id].diet) {
+            diet.value = "";
+          } else {
+            diet.value = data[item_id].diet;
+          }
+          if (!data[item_id].spicy) {
+            spicy.value = "";
+          } else {
+            spicy.value = data[item_id].spicy;
+          }
+      })
   </script>
 {% endblock %}

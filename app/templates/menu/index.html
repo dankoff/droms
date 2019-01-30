@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  {{ super() }}
+  <script type="text/javascript">var itms = {{ all_items | tojson }} </script>
+  <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+{% endblock %}
+
+{% block header %}
+  <h1>{% block title %}Home{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  </br>
+  {% for m, data in menu_data.items() %}
+    <h2>{{ m[0] }}</h2>
+    <p><i>{{ m[1] }}</i></p>
+    {% if g.user %}
+      <nav>
+        <ul>
+          <li><a class="left" href="{{ url_for('menu.add_item', menu=m[0]) }}">Add Item</a>
+          <li><a class="left" href="{{ url_for('menu.add_section', menu=m[0]) }}">Add Section</a>
+          <li><a class="right" href="{{ url_for('menu.edit_item', menu=m[0]) }}">Edit Item</a>
+          <li><a class="right" href="{{ url_for('menu.edit_section', menu=m[0]) }}">Edit Section</a>
+        </ul>
+      </nav>
+    {% endif %}
+    {% for s, items in data.items() %}
+      <article class="item">
+        <header>
+          <div>
+            <hr>
+            <h1>{{ s[0] }}</h1>
+            <p><i>{{ s[1] }}</i></p>
+            <hr>
+          </div>
+        </header>
+        {% for i in items %}
+        <div>
+          <a href="{{ url_for('cart.add_to_cart', item_id=i['id']) }}" class="add-btn">
+            <h4>{{ i['name'] }} - {{ "£%.2f"|format(i['cost']) }}</h4>
+          </a>
+          <p class="italic">{{ i['description'] }}</p>
+          <nav>
+            <ul class="centre">
+              {% if i['diet'] %}
+              <li class="diet"><img src="static/images/{{i['diet']}}.png" alt="{{i['diet']}}"
+                 title="{{i['diet']}}" width="50" height="35">
+              {% endif %}
+              {% if i['spicy'] %}
+              <li class="spicy"><img src="static/images/{{i['spicy']}}.png" alt="{{i['spicy']}}"
+                 title="{{i['spicy']}}" width="50" height="35">
+              {% endif %}
+            </ul>
+          </nav>
+        </div>
+        {% endfor %}
+      </article>
+    {% endfor %}
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

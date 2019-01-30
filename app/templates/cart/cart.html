@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='cart.css') }}">
+  <script type="text/javascript">var itms = {{ items | tojson }}</script>
+  <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+{% endblock %}
+
+{% block header %}
+  <h1>{% block title %}My Order{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <div class="cart">
+      {% if items %}
+      {% for i in items %}
+        <div class="item">
+          <div class="buttons">
+            <button type="button" class="delete-btn"
+              onclick="window.location.href='{{ url_for('cart.update_cart', id=i['id'], action='remove') }}'">
+              X
+            </button>
+          </div>
+          <div class="description">
+            <span>{{ i['name'] }}</span>
+            <span>{{ i['description'] }}</span>
+            <div class="diet_spicy">
+              <nav>
+                <ul>
+                {% if i['diet'] %}
+                <li><img src="static/images/{{i['diet']}}.png" alt="{{i['diet']}}"
+                   title="{{i['diet']}}" width="50" height="35">
+                {% endif %}
+                {% if i['spicy'] %}
+                <li><img src="static/images/{{i['spicy']}}.png" alt="{{i['spicy']}}"
+                   title="{{i['spicy']}}" width="50" height="35">
+                {% endif %}
+                </ul>
+              </nav>
+            </div>
+            <span class="cost">{{ "£%.2f"|format(i['cost']) }}</span>
+          </div>
+          <div class="quantity" id="{{ i['id'] }}">
+            <button class="plus-btn" type="button" name="button"
+              onclick="window.location.href='{{ url_for('cart.update_cart', id=i['id'], action='inc') }}'">
+              +
+            </button>
+            <input type="text" class="qty" value="{{ i['qty'] }}" readonly>
+            <button class="minus-btn" type="button" name="button"
+              onclick="window.location.href='{{ url_for('cart.update_cart', id=i['id'], action='dec') }}'">
+              -
+            </button>
+          </div>
+          <div class="total-price">{{ "£%.2f" | format(i['total_cost']) }}</div>
+        </div>
+      {% endfor %}
+      {% endif %}
+      <div class="cart-total">
+        <div style="float: left;">
+          <h2>Cart Total</h2>
+          <span class="cart-total-cost">
+            {% set totalCost = session['cart'] | sum(attribute='total_cost') %}
+            {{ "£%.2f" | format(totalCost) }}
+          </span>
+        </div>
+        <span style="float: right;">
+          <button class="order_button" type="button"
+          onclick="window.location.href='{{ url_for('cart.make_order', total=totalCost) }}'">
+          Order
+          </button>
+        </span>
+      </div>
+    </div>
+  </form>
+{% endblock %}

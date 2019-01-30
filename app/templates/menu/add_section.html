@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
 {% block header %}
-  <h1>{% block title %}Add New Item - {{ menu }}{% endblock %}</h1>
+  <h1>{% block title %}Add New Section - {{ menu }}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -12,16 +16,6 @@
     <br>
     <label for="description">Description</label>
     <textarea name="description" id="description">{{ request.form['description'] }}</textarea>
-    <br>
-    <label for="cost">Cost</label>
-    <input type="number" name="cost" id="cost" step="0.01" min="0" value="{{ request.form['cost'] }}" required>
-    <br>
-    <label for="section">Section</label>
-    <select name="section" id="section">
-      {% for s in sections %}
-        <option value="{{ s }}">{{ s }}</option>
-      {% endfor %}
-    </select>
     </br>
     <input type="submit" value="Save">
   </form>

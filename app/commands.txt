@@ -31,6 +31,8 @@ CREATE TABLE table1
 
 INSERT INTO table1 SELECT * FROM _table1_old;
 
+DROP TABLE _table1_old;
+
 COMMIT;
 
 PRAGMA foreign_keys=on;

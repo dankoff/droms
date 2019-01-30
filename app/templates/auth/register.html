@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block header %}
+  <h1>{% block title %}Register{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method='post'>
+    <label for='username'>Username</label>
+    <input name='username' id='username' value="{{request.form['username']}}" required>
+    <label for='password'>Password</label>
+    <input type='password' name='password' id='password' required>
+    <label for='confPassword'>Confirm Password</label>
+    <input type='password' name='confPassword' id='confPassword' required>
+    </br>
+    <label for="staffType">Staff Type</label>
+    <select name="staffType" id="staffType" required>
+      <option value="Waiter">Waiter</option>
+      <option value="Cook">Cook</option>
+    </select>
+    </br>
+    <label for="workPlace">Work Place</label>
+    <select name="workPlace" id="workPlace" required>
+      {% for p in work_places %}
+        <option value="{{p}}">{{p}}</option>
+      {% endfor %}
+    </select>
+    </br>
+    <input type='submit' value='Register'>
+  </form>
+{% endblock %}
