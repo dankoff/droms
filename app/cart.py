@@ -32,7 +32,7 @@ def add_to_cart(item_id):
                 session['cart'].append(item_details)
             session.modified = True
 
-    return redirect( url_for('menu.index') )
+    return redirect( url_for('index') )
 
 @bp.route('/make_order/<float:total>')
 def make_order(total):
@@ -40,7 +40,6 @@ def make_order(total):
     if 'cart' in session:
         db = get_db()
         custIP = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
-        print("IP: %s" % custIP)
         orderId = db.execute(
             'INSERT INTO custOrder'
             ' (custIP, totalCost, tableNo)'

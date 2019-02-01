@@ -179,3 +179,16 @@ def delete_section(section, menu):
         (section, menu)
     )
     db.commit()
+
+def get_all_orders():
+    ''' retrieves all orders '''
+    db = get_db()
+    orders = db.execute(
+        'SELECT orderId, tableNo, name, diet, spicy, quantity'
+        ' FROM orderDetail o'
+        ' JOIN item i ON o.itemId = i.id'
+        ' JOIN custOrder co ON o.orderId = co.id'
+    ).fetchall()
+    if orders is None:
+        abort( 404, "No orders found." )
+    return orders

@@ -59,7 +59,7 @@
       {% endif %}
       <div class="cart-total">
         <div style="float: left;">
-          <h2>Cart Total</h2>
+          <h2>Order Total</h2>
           <span class="cart-total-cost">
             {% set totalCost = session['cart'] | sum(attribute='total_cost') %}
             {{ "£%.2f" | format(totalCost) }}

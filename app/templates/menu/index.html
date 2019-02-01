@@ -15,7 +15,7 @@
   {% for m, data in menu_data.items() %}
     <h2>{{ m[0] }}</h2>
     <p><i>{{ m[1] }}</i></p>
-    {% if g.user %}
+    {% if g.user and g.user['type'] == 'Manager' %}
       <nav>
         <ul>
           <li><a class="left" href="{{ url_for('menu.add_item', menu=m[0]) }}">Add Item</a>

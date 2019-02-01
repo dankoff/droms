@@ -36,8 +36,12 @@ def make_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
-    # register cart Blueprint
+    # register cart blueprint
     from . import cart
     app.register_blueprint(cart.bp)
+
+    # register kitchen blueprint
+    from . import kitchen
+    app.register_blueprint(kitchen.bp)
 
     return app

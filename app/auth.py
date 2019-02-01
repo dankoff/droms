@@ -39,7 +39,7 @@ def register():
                 (username, generate_password_hash(password), staffType, workPlace)
             )
             db.commit()
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('menu.index'))
 
         flash(error)
     return render_template('auth/register.html', work_places=work_places)
@@ -60,13 +60,14 @@ def login():
             error = 'Incorrect username.'
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
-        elif user['type'] != 'Manager':
-            error = 'Access denied. User must be a Manager but is a {}'.format(user['type'])
 
         if error is None:
             session.pop('user_id', None)
             session['user_id'] = user['id']
-            return redirect(url_for('index'))
+            if user['type'] == 'Cook':
+                return redirect(url_for('kitchen.home'))
+            else:
+                return redirect(url_for('index'))
 
         flash(error)
 

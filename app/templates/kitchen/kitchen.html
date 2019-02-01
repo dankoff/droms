@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='kitchen.css') }}">
+{% endblock %}
+
+{% block header %}
+  <h1>{% block title %}Orders{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <table>
+    <thead>
+      <tr>
+        <th>Order</th>
+        <th>Table</th>
+        <th>Item</th>
+        <th>Diet</th>
+        <th>Spicy<th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o, item_detail in orderDetail.items() %}
+        <tr>
+          <td>{{ o[0] }}</td>
+          <td>{{ o[1] }}</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        {% for i in item_detail %}
+          <tr>
+            <td></td>
+            <td></td>
+            <td><b>{{ i['qty'] }}</b> x <i>{{ i['name'] }}</i></td>
+            <td>
+              {% if i['diet'] %}
+              <img src="../static/images/{{i['diet']}}.png" alt="{{i['diet']}}"
+               title="{{i['diet']}}" width="50" height="35">
+              {% endif %}
+            </td>
+            <td>
+              {% if i['spicy'] %}
+              <img src="../static/images/{{i['spicy']}}.png" alt="{{i['spicy']}}"
+               title="{{i['spicy']}}" width="50" height="35">
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+        <tr class="linebreak">
+          {% for i in range(5) %}
+          <td></td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

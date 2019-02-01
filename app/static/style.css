@@ -6,6 +6,7 @@ hr { border: none; border-top: 1px solid lightgray; }
 nav { display: flex; align-items: center; padding: 0 0.5rem; }
 nav h1 { flex: auto; margin: 0; }
 nav ul { display: flex; list-style: none; margin: 0; padding: 0; }
+nav ul li.navigation { padding: 0.5rem; }
 nav ul li a { display: block; padding: 0.5rem; }
 nav ul li a .left { float: left; }
 nav ul li a .right { float: right; }
@@ -27,3 +28,4 @@ nav ul li a .right { float: right; }
 input.danger { color: #cc2f2e; }
 input[type=submit] { align-self: start; min-width: 10em; }
 .buttons { position: relative; display: inline-block; cursor: pointer; padding-top: 30px; margin-right: 60px; }
+.warning { font-family: helvetica; color: red; }

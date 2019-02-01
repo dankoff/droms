@@ -35,7 +35,7 @@ def add_section(menu):
             (name, desc, menu)
         )
         db.commit()
-        return redirect( url_for('menu.index') )
+        return redirect( url_for('index') )
     return render_template( 'menu/add_section.html', menu=menu )
 
 @bp.route('/<menu>/edit_section', methods=('GET', 'POST'))
@@ -55,7 +55,7 @@ def edit_section(menu):
         else:
             util.edit_section(name, desc, section, menu)
 
-        return redirect( url_for('menu.index') )
+        return redirect( url_for('index') )
     return render_template( 'menu/edit_section.html', sections=sections, menu=menu )
 
 @bp.route('/<menu>/add_item', methods=('GET', 'POST'))
@@ -79,7 +79,7 @@ def add_item(menu):
             (name, desc, cost, section, menu, diet, spicy)
         )
         db.commit()
-        return redirect( url_for('menu.index') )
+        return redirect( url_for('index') )
     return render_template( 'menu/add_item.html', sections=sections, menu=menu )
 
 @bp.route('/<menu>/edit_item', methods=('GET', 'POST'))
@@ -110,6 +110,6 @@ def edit_item(menu):
         else:
             util.edit_item(id, name, desc, cost, section, diet, spicy)
 
-        return redirect( url_for('menu.index') )
+        return redirect( url_for('index') )
     return render_template( 'menu/edit_item.html', items=items_by_id,
                             sections=sections, menu=menu )
