@@ -3,23 +3,27 @@
   <head>
     {% block head %}
     <title>{% block title %}{% endblock %} | DROMS</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% endblock %}
   </head>
   <body>
     <nav>
       <h1><a href="{{ url_for('index') }}">DROMS</a></h1>
       <ul>
+        {% if not g.user %}
         <li class="navigation">[{{ session['cart'] | sum(attribute='qty') }}]
-        <li><a href="{{ url_for('cart.view_cart') }}">View Order</a>
+        <li><h3><a href="{{ url_for('cart.view_cart') }}">View Order</a></h3>
+        {% endif %}
         {% if g.user %}
-          <li class="navigation">Welcome {{ g.user['username'] }}
-          <li><a href="{{ url_for('auth.logout') }}">Logout</a>
+          <li class="navigation"><i>Welcome {{ g.user['username'] }}</i>
+          <li><h3><a href="{{ url_for('auth.logout') }}">Logout</a></h3>
           {% if g.user['type'] == 'Manager' %}
-          <li><a href="{{ url_for('auth.register') }}">Register</a>
+          <li><h3><a href="{{ url_for('auth.register') }}">Register</a></h3>
+          {% elif g.user['type'] == 'Cook' %}
+          <li><h3><a href="{{ url_for('kitchen.home') }}">Orders</a></h3>
           {% endif %}
         {% else %}
-          <li><a href="{{ url_for('auth.login') }}">Login</a>
+          <li><h3><a href="{{ url_for('auth.login') }}">Login</a></h3>
         {% endif %}
       </ul>
     </nav>

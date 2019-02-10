@@ -184,7 +184,7 @@ def get_all_orders():
     ''' retrieves all orders '''
     db = get_db()
     orders = db.execute(
-        'SELECT orderId, tableNo, name, diet, spicy, quantity'
+        'SELECT orderId, tableNo, created, name, diet, spicy, quantity'
         ' FROM orderDetail o'
         ' JOIN item i ON o.itemId = i.id'
         ' JOIN custOrder co ON o.orderId = co.id'
@@ -192,3 +192,31 @@ def get_all_orders():
     if orders is None:
         abort( 404, "No orders found." )
     return orders
+
+def get_orders_by_date(date=None):
+    ''' retrieves all orders for the given date in the format yyyy-mm-dd '''
+    orders = []
+    if date:
+        db = get_db()
+        orders = db.execute(
+            'SELECT id, tableNo, created'
+            ' FROM custOrder'
+            ' WHERE created LIKE ?', (date+'%',)
+        ).fetchall()
+        if orders is None:
+            abort( 404, "No orders found." )
+    return orders
+
+def get_order_by_id(id):
+    ''' retrieves order details for the given order id '''
+    db = get_db()
+    order = db.execute(
+        'SELECT orderId, itemId, tableNo, created, name, diet, spicy, quantity'
+        ' FROM orderDetail o'
+        ' JOIN item i ON o.itemId = i.id'
+        ' JOIN custOrder co ON o.orderId = co.id'
+        ' WHERE co.id=?', (id,)
+    ).fetchall()
+    if order is None:
+        abort( 404, "No orders found." )
+    return order

@@ -18,10 +18,10 @@
     {% if g.user and g.user['type'] == 'Manager' %}
       <nav>
         <ul>
-          <li><a class="left" href="{{ url_for('menu.add_item', menu=m[0]) }}">Add Item</a>
-          <li><a class="left" href="{{ url_for('menu.add_section', menu=m[0]) }}">Add Section</a>
-          <li><a class="right" href="{{ url_for('menu.edit_item', menu=m[0]) }}">Edit Item</a>
-          <li><a class="right" href="{{ url_for('menu.edit_section', menu=m[0]) }}">Edit Section</a>
+          <li><a href="{{ url_for('menu.add_item', menu=m[0]) }}">Add Item</a>
+          <li><a href="{{ url_for('menu.add_section', menu=m[0]) }}">Add Section</a>
+          <li><a href="{{ url_for('menu.edit_item', menu=m[0]) }}">Edit Item</a>
+          <li><a href="{{ url_for('menu.edit_section', menu=m[0]) }}">Edit Section</a>
         </ul>
       </nav>
     {% endif %}
@@ -37,9 +37,14 @@
         </header>
         {% for i in items %}
         <div>
-          <a href="{{ url_for('cart.add_to_cart', item_id=i['id']) }}" class="add-btn">
+          {% if not g.user %}
+          <a href="{{ url_for('cart.add_to_cart', item_id=i['id']) }}"
+          class="add-btn" title="Click to order">
             <h4>{{ i['name'] }} - {{ "£%.2f"|format(i['cost']) }}</h4>
           </a>
+          {% else %}
+          <h4>{{ i['name'] }} - {{ "£%.2f"|format(i['cost']) }}</h4>
+          {% endif %}
           <p class="italic">{{ i['description'] }}</p>
           <nav>
             <ul class="centre">

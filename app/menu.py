@@ -21,7 +21,7 @@ def index():
     return render_template('menu/index.html', menu_data=menu_data, all_items=items_by_id)
 
 @bp.route('/<menu>/add_section', methods=('GET', 'POST'))
-@login_required
+@login_required(type='Manager')
 def add_section(menu):
     ''' adds a new menu section '''
     if request.method == 'POST':
@@ -39,7 +39,7 @@ def add_section(menu):
     return render_template( 'menu/add_section.html', menu=menu )
 
 @bp.route('/<menu>/edit_section', methods=('GET', 'POST'))
-@login_required
+@login_required(type='Manager')
 def edit_section(menu):
     ''' edits/deletes an existing menu section '''
     sections = { s['name'] : s['description'] for s in \
@@ -59,7 +59,7 @@ def edit_section(menu):
     return render_template( 'menu/edit_section.html', sections=sections, menu=menu )
 
 @bp.route('/<menu>/add_item', methods=('GET', 'POST'))
-@login_required
+@login_required(type='Manager')
 def add_item(menu):
     ''' adds a new menu item to the database '''
     sections = [ s['name'] for s in util.get_sections_by_menu(menu) ]
@@ -83,7 +83,7 @@ def add_item(menu):
     return render_template( 'menu/add_item.html', sections=sections, menu=menu )
 
 @bp.route('/<menu>/edit_item', methods=('GET', 'POST'))
-@login_required
+@login_required(type='Manager')
 def edit_item(menu):
     ''' edits/deletes the given item from the menu '''
     items = util.get_items_by_menu(menu)

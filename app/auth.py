@@ -89,12 +89,17 @@ def logout():
     session.pop('user_id', None)
     return redirect(url_for('index'))
 
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None:
-            return redirect(url_for('auth.login'))
+def login_required(type=None):
+    def wrapper(view):
+        @functools.wraps(view)
+        def wrapped_view(**kwargs):
+            if g.user is None:
+                return redirect(url_for('auth.login'))
+            else:
+                if type:
+                    if g.user['type'] != type:
+                        return redirect(url_for('index'))
 
-        return view(**kwargs)
-
-    return wrapped_view
+            return view(**kwargs)
+        return wrapped_view
+    return wrapper

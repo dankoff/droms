@@ -2,7 +2,15 @@
 
 {% block head %}
   {{ super() }}
-  <link rel="stylesheet" href="{{ url_for('static', filename='kitchen.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/kitchen.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/lib/jquery-ui.min.css') }}">
+  <script src="{{ url_for('static', filename='js/lib/jquery.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/lib/jquery-ui.min.js') }}"></script>
+  <script type="text/javascript">
+    var ordersURL = '{{ url_for("kitchen.ordersByDate") }}';
+    var showOrderURL = '{{ url_for("kitchen.showOrder") }}';
+  </script>
+  <script src="{{ url_for('static', filename='js/kitchen.js') }}"></script>
 {% endblock %}
 
 {% block header %}
@@ -10,50 +18,31 @@
 {% endblock %}
 
 {% block content %}
-  <table>
-    <thead>
+  <p>Date: <input type="text" name="date" id="date"
+    placeholder="Click to select a date" readonly value="">
+  </p>
+  <table class="order" id="tblOrder">
+    <thead class="orders">
       <tr>
-        <th>Order</th>
-        <th>Table</th>
-        <th>Item</th>
-        <th>Diet</th>
-        <th>Spicy<th>
+        <th class="orders">Order #</th>
+        <th class="orders">Table #</th>
+        <th class="orders">Date and Time</th>
       </tr>
     </thead>
-    <tbody>
-      {% for o, item_detail in orderDetail.items() %}
-        <tr>
-          <td>{{ o[0] }}</td>
-          <td>{{ o[1] }}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        {% for i in item_detail %}
-          <tr>
-            <td></td>
-            <td></td>
-            <td><b>{{ i['qty'] }}</b> x <i>{{ i['name'] }}</i></td>
-            <td>
-              {% if i['diet'] %}
-              <img src="../static/images/{{i['diet']}}.png" alt="{{i['diet']}}"
-               title="{{i['diet']}}" width="50" height="35">
-              {% endif %}
-            </td>
-            <td>
-              {% if i['spicy'] %}
-              <img src="../static/images/{{i['spicy']}}.png" alt="{{i['spicy']}}"
-               title="{{i['spicy']}}" width="50" height="35">
-              {% endif %}
-            </td>
-          </tr>
-        {% endfor %}
-        <tr class="linebreak">
-          {% for i in range(5) %}
-          <td></td>
-          {% endfor %}
-        </tr>
-      {% endfor %}
-    </tbody>
+    <tbody></tbody>
+  </table>
+
+  <table class="item" id="tblItem">
+    <thead class="items">
+      <tr>
+        <th class="items">Order</th>
+        <th class="items">Table</th>
+        <th class="items">Date</th>
+        <th class="items">Item</th>
+        <th class="items">Diet</th>
+        <th class="items">Spicy<th>
+      </tr>
+    </thead>
+    <tbody></tbody>
   </table>
 {% endblock %}

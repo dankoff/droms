@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, request, redirect, url_for, flash, render_template, session
+    Blueprint, request, g, redirect, url_for, flash, render_template, session
 )
 from werkzeug.exceptions import abort
 from app.db import get_db
@@ -9,8 +9,10 @@ bp = Blueprint('cart', __name__)
 
 @bp.route('/view_cart')
 def view_cart():
-    items_by_id = session.get('cart', None)
-    return render_template( 'cart/cart.html', items=items_by_id )
+    if not g.user:
+        items_by_id = session.get('cart', None)
+        return render_template( 'cart/cart.html', items=items_by_id )
+    return redirect( url_for('index') )
 
 @bp.route('/add_to_cart/<int:item_id>')
 def add_to_cart(item_id):

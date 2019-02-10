@@ -2,7 +2,7 @@
 
 {% block head %}
   {{ super() }}
-  <link rel="stylesheet" href="{{ url_for('static', filename='cart.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
   <script type="text/javascript">var itms = {{ items | tojson }}</script>
   <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
 {% endblock %}
