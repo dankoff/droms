@@ -8,7 +8,7 @@ import app.util as util
 
 bp = Blueprint('menu', __name__)
 
-@bp.route('/')
+@bp.route('/menu')
 def index():
     menu_data = util.get_menus_data()
     items = util.get_all_items()
@@ -18,10 +18,10 @@ def index():
             'name': i['name'], 'description': i['description'],
             'cost': i['cost'], 'diet': i['diet'], 'spicy': i['spicy']
         }
-    return render_template('menu/index.html', menu_data=menu_data, all_items=items_by_id)
+    return render_template('menu/menu.html', menu_data=menu_data, all_items=items_by_id)
 
 @bp.route('/<menu>/add_section', methods=('GET', 'POST'))
-@login_required(type='Manager')
+@login_required(types=['Manager'])
 def add_section(menu):
     ''' adds a new menu section '''
     if request.method == 'POST':
@@ -35,11 +35,11 @@ def add_section(menu):
             (name, desc, menu)
         )
         db.commit()
-        return redirect( url_for('index') )
+        return redirect( url_for('.index') )
     return render_template( 'menu/add_section.html', menu=menu )
 
 @bp.route('/<menu>/edit_section', methods=('GET', 'POST'))
-@login_required(type='Manager')
+@login_required(types=['Manager'])
 def edit_section(menu):
     ''' edits/deletes an existing menu section '''
     sections = { s['name'] : s['description'] for s in \
@@ -55,11 +55,11 @@ def edit_section(menu):
         else:
             util.edit_section(name, desc, section, menu)
 
-        return redirect( url_for('index') )
+        return redirect( url_for('.index') )
     return render_template( 'menu/edit_section.html', sections=sections, menu=menu )
 
 @bp.route('/<menu>/add_item', methods=('GET', 'POST'))
-@login_required(type='Manager')
+@login_required(types=['Manager'])
 def add_item(menu):
     ''' adds a new menu item to the database '''
     sections = [ s['name'] for s in util.get_sections_by_menu(menu) ]
@@ -79,11 +79,11 @@ def add_item(menu):
             (name, desc, cost, section, menu, diet, spicy)
         )
         db.commit()
-        return redirect( url_for('index') )
+        return redirect( url_for('.index') )
     return render_template( 'menu/add_item.html', sections=sections, menu=menu )
 
 @bp.route('/<menu>/edit_item', methods=('GET', 'POST'))
-@login_required(type='Manager')
+@login_required(types=['Manager'])
 def edit_item(menu):
     ''' edits/deletes the given item from the menu '''
     items = util.get_items_by_menu(menu)
@@ -110,6 +110,6 @@ def edit_item(menu):
         else:
             util.edit_item(id, name, desc, cost, section, diet, spicy)
 
-        return redirect( url_for('index') )
+        return redirect( url_for('.index') )
     return render_template( 'menu/edit_item.html', items=items_by_id,
                             sections=sections, menu=menu )

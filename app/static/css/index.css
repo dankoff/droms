@@ -1,0 +1,47 @@
+table {
+  table-layout: fixed;
+  width: 80%;
+  margin-left:10%;
+  margin-right:10%;
+  border-collapse: collapse;
+}
+
+html {
+  font-family: 'helvetica neue', helvetica, arial, sans-serif;
+}
+
+th, td {
+  padding: 10px;
+}
+
+th {
+  letter-spacing: 2px;
+}
+
+td {
+  letter-spacing: 1px;
+}
+
+tbody td {
+  text-align: center;
+}
+
+thead {
+  border-bottom: 2px solid #377ba8;
+}
+
+thead th:nth-child(1) {
+  width: 25%;
+}
+
+thead th:nth-child(2) {
+  width: 25%;
+}
+
+thead th:nth-child(3) {
+  width: 25%;
+}
+
+thead th:nth-child(4) {
+  width: 25%;
+}

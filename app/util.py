@@ -220,3 +220,15 @@ def get_order_by_id(id):
     if order is None:
         abort( 404, "No orders found." )
     return order
+
+def get_tables(restName):
+    ''' retrieves all tables for the given restaurant name '''
+    db = get_db()
+    tables = db.execute(
+        'SELECT tableNo, noOfSeats, seatsLeft, free'
+        ' FROM restTable'
+        ' WHERE restName=?', (restName,)
+    ).fetchall()
+    if tables is None:
+        abort(404, "No tables found for restaurant {}".format(restName))
+    return tables

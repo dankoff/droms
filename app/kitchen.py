@@ -11,19 +11,19 @@ bp = Blueprint('kitchen', __name__, url_prefix='/kitchen',
                 static_folder='static')
 
 @bp.route('/home')
-@login_required(type='Cook')
+@login_required(types=['Manager', 'Cook'])
 def home():
     return render_template( 'kitchen/kitchen.html' )
 
 @bp.route('/order')
-@login_required(type='Cook')
+@login_required(types=['Manager', 'Cook'])
 def showOrder():
     id = request.args.get('orderId')
     orderDetails = itemsByOrder(id)
     return jsonify(orderDetails)
 
 @bp.route('/home/orders')
-@login_required(type='Cook')
+@login_required(types=['Manager', 'Cook'])
 def ordersByDate():
     aDate = request.args.get('selDate', str(date.today()), type=str)
     orders = showOrders(aDate)

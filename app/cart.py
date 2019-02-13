@@ -12,7 +12,7 @@ def view_cart():
     if not g.user:
         items_by_id = session.get('cart', None)
         return render_template( 'cart/cart.html', items=items_by_id )
-    return redirect( url_for('index') )
+    return redirect( url_for('menu.index') )
 
 @bp.route('/add_to_cart/<int:item_id>')
 def add_to_cart(item_id):
@@ -34,11 +34,15 @@ def add_to_cart(item_id):
                 session['cart'].append(item_details)
             session.modified = True
 
-    return redirect( url_for('index') )
+    return redirect( url_for('menu.index') )
 
 @bp.route('/make_order/<float:total>')
 def make_order(total):
     ''' store customer order details to the database '''
+    # ensure user has selected a table first
+    if 'tableNo' not in session:
+        flash("You must select a table before you can place an order.")
+        return redirect( url_for('index') )
     if 'cart' in session:
         db = get_db()
         custIP = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
@@ -46,7 +50,7 @@ def make_order(total):
             'INSERT INTO custOrder'
             ' (custIP, totalCost, tableNo)'
             ' VALUES (?, ?, ?)',
-            (custIP, total, 1)
+            (custIP, total, session['tableNo'])
         ).lastrowid
         db.commit()
         if orderId is not None:

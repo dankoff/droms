@@ -30,7 +30,6 @@ def make_app(test_config=None):
     # register menu blueprint
     from . import menu
     app.register_blueprint(menu.bp)
-    app.add_url_rule('/', endpoint='index')
 
     # register auth blueprint
     from . import auth
@@ -43,5 +42,10 @@ def make_app(test_config=None):
     # register kitchen blueprint
     from . import kitchen
     app.register_blueprint(kitchen.bp)
+
+    # register index blueprint
+    from . import index
+    app.register_blueprint(index.bp)
+    app.add_url_rule('/', endpoint='index')
 
     return app

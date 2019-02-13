@@ -16,14 +16,14 @@
     <h2>{{ m[0] }}</h2>
     <p><i>{{ m[1] }}</i></p>
     {% if g.user and g.user['type'] == 'Manager' %}
-      <nav>
-        <ul>
-          <li><a href="{{ url_for('menu.add_item', menu=m[0]) }}">Add Item</a>
-          <li><a href="{{ url_for('menu.add_section', menu=m[0]) }}">Add Section</a>
-          <li><a href="{{ url_for('menu.edit_item', menu=m[0]) }}">Edit Item</a>
-          <li><a href="{{ url_for('menu.edit_section', menu=m[0]) }}">Edit Section</a>
-        </ul>
-      </nav>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('menu.add_item', menu=m[0]) }}">Add Item</a></li>
+        <li><a href="{{ url_for('menu.add_section', menu=m[0]) }}">Add Section</a></li>
+        <li><a href="{{ url_for('menu.edit_item', menu=m[0]) }}">Edit Item</a></li>
+        <li><a href="{{ url_for('menu.edit_section', menu=m[0]) }}">Edit Section</a></li>
+      </ul>
+    </nav>
     {% endif %}
     {% for s, items in data.items() %}
       <article class="item">
@@ -50,11 +50,11 @@
             <ul class="centre">
               {% if i['diet'] %}
               <li class="diet"><img src="static/images/{{i['diet']}}.png" alt="{{i['diet']}}"
-                 title="{{i['diet']}}" width="50" height="35">
+                 title="{{i['diet']}}" width="50" height="35"></li>
               {% endif %}
               {% if i['spicy'] %}
               <li class="spicy"><img src="static/images/{{i['spicy']}}.png" alt="{{i['spicy']}}"
-                 title="{{i['spicy']}}" width="50" height="35">
+                 title="{{i['spicy']}}" width="50" height="35"></li>
               {% endif %}
             </ul>
           </nav>

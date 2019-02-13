@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
+{% block header %}
+  <h1>{% block title %}Welcome - Pick a table{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<table>
+  <thead>
+    <tr>
+      <th>Table #</th>
+      <th>Seats Taken</th>
+      <th>Seats Available</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in tables %}
+    <tr>
+      <td>{{ t['tableNo'] }}</td>
+      <td>{{ t['noOfSeats'] - t['seatsLeft'] }}</td>
+      <td>{{ t['seatsLeft'] }}</td>
+      <td>
+        {% if t['seatsLeft'] > 0 %}
+        <button id="btn{{t['tableNo']}}" type="button"
+          onclick="window.location.href='{{ url_for('index.table_selection',
+          id=t['tableNo'], seatsLeft=t['seatsLeft']) }}'">
+          Select
+        </button>
+        {% else %}
+        <button type="button" disabled>Select</button>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

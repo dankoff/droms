@@ -6,6 +6,7 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.db import get_db
 from app.util import get_work_places
+from app.index import freeSeat
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -64,10 +65,13 @@ def login():
         if error is None:
             session.pop('user_id', None)
             session['user_id'] = user['id']
+            # free seat if user successfully logs in
+            if 'tableNo' in session:
+                freeSeat(session['tableNo'])
             if user['type'] == 'Cook':
                 return redirect(url_for('kitchen.home'))
             else:
-                return redirect(url_for('index'))
+                return redirect(url_for('menu.index'))
 
         flash(error)
 
@@ -87,18 +91,18 @@ def load_logged_in_user():
 @bp.route('/logout')
 def logout():
     session.pop('user_id', None)
-    return redirect(url_for('index'))
+    return redirect(url_for('menu.index'))
 
-def login_required(type=None):
+def login_required(types=None):
     def wrapper(view):
         @functools.wraps(view)
         def wrapped_view(**kwargs):
             if g.user is None:
                 return redirect(url_for('auth.login'))
             else:
-                if type:
-                    if g.user['type'] != type:
-                        return redirect(url_for('index'))
+                if types:
+                    if g.user['type'] not in types:
+                        return redirect(url_for('menu.index'))
 
             return view(**kwargs)
         return wrapped_view

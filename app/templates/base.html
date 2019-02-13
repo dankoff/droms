@@ -8,22 +8,28 @@
   </head>
   <body>
     <nav>
-      <h1><a href="{{ url_for('index') }}">DROMS</a></h1>
+      <h1><a href="{{ url_for('menu.index') }}">DROMS</a></h1>
       <ul>
+        {% if session.get('tableNo', none) %}
+        <li class="navigation">Table No: {{ session['tableNo'] }}</li>
+        <li><h3><a href="{{ url_for('index.free_seat', tableNo=session['tableNo']) }}">Free Seat</a></h3></li>
+        {% endif %}
         {% if not g.user %}
-        <li class="navigation">[{{ session['cart'] | sum(attribute='qty') }}]
-        <li><h3><a href="{{ url_for('cart.view_cart') }}">View Order</a></h3>
+        <li><h3><a href="{{ url_for('index') }}">View Tables</a></h3></li>
+        <li class="navigation">[{{ session['cart'] | sum(attribute='qty') }}]</li>
+        <li><h3><a href="{{ url_for('cart.view_cart') }}">View Order</a></h3></li>
         {% endif %}
         {% if g.user %}
-          <li class="navigation"><i>Welcome {{ g.user['username'] }}</i>
-          <li><h3><a href="{{ url_for('auth.logout') }}">Logout</a></h3>
+          <li class="navigation"><i>Welcome {{ g.user['username'] }}</i></li>
+          <li><h3><a href="{{ url_for('auth.logout') }}">Logout</a></h3></li>
           {% if g.user['type'] == 'Manager' %}
-          <li><h3><a href="{{ url_for('auth.register') }}">Register</a></h3>
-          {% elif g.user['type'] == 'Cook' %}
-          <li><h3><a href="{{ url_for('kitchen.home') }}">Orders</a></h3>
+          <li><h3><a href="{{ url_for('auth.register') }}">Register</a></h3></li>
+          {% endif %}
+          {% if g.user['type'] in ['Manager', 'Cook'] %}
+          <li><h3><a href="{{ url_for('kitchen.home') }}">Orders</a></h3></li>
           {% endif %}
         {% else %}
-          <li><h3><a href="{{ url_for('auth.login') }}">Login</a></h3>
+          <li><h3><a href="{{ url_for('auth.login') }}">Login</a></h3></li>
         {% endif %}
       </ul>
     </nav>
