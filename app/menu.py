@@ -6,19 +6,15 @@ from app.db import get_db
 from app.auth import login_required
 import app.util as util
 
-bp = Blueprint('menu', __name__)
+bp = Blueprint('menu', __name__, url_prefix='/menu')
 
-@bp.route('/menu')
+@bp.route('/index', methods=('GET', 'POST'))
 def index():
     menu_data = util.get_menus_data()
-    items = util.get_all_items()
-    items_by_id = {}
-    for i in items:
-        items_by_id[ str(i['id']) ] = {
-            'name': i['name'], 'description': i['description'],
-            'cost': i['cost'], 'diet': i['diet'], 'spicy': i['spicy']
-        }
-    return render_template('menu/menu.html', menu_data=menu_data, all_items=items_by_id)
+    if request.method == 'POST':
+        filters = request.form.getlist('filters') # list of filters
+        meny_data = filter_menu_data(menu_data, filters)
+    return render_template('menu/menu.html', menu_data=menu_data)
 
 @bp.route('/<menu>/add_section', methods=('GET', 'POST'))
 @login_required(types=['Manager'])
@@ -113,3 +109,13 @@ def edit_item(menu):
         return redirect( url_for('.index') )
     return render_template( 'menu/edit_item.html', items=items_by_id,
                             sections=sections, menu=menu )
+
+def filter_menu_data(menu_data, filters):
+    ''' filter the items to be shown to the user '''
+    if not filters:
+        return menu_data
+    for menu, section in menu_data.items():
+        for sec, items in section.items():
+            filtered_items = filter(lambda x : any( fltr in filters for fltr in [x['diet'], x['spicy']] ), items)
+            menu_data[menu][sec] = list(filtered_items)
+    return menu_data

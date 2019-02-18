@@ -2,12 +2,11 @@
 
 {% block head %}
   {{ super() }}
-  <script type="text/javascript">var itms = {{ all_items | tojson }} </script>
-  <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/menu.js') }}"></script>
 {% endblock %}
 
 {% block header %}
-  <h1>{% block title %}Home{% endblock %}</h1>
+  <h1>{% block title %}Menus{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -24,8 +23,26 @@
         <li><a href="{{ url_for('menu.edit_section', menu=m[0]) }}">Edit Section</a></li>
       </ul>
     </nav>
+    {% elif g.user is none and loop.first %}
+    <nav>
+      <ul>
+        <li>
+          <form id="filter" method="post">
+            <fieldset>
+              <legend>Filters</legend>
+              <input type="checkbox" id="vegan" name="filters" value="Vegan"><label for="vegan">Vegan</label>
+              <input type="checkbox" id="vegetarian" name="filters" value="Vegetarian"><label for="vegetarian">Vegetarian</label>
+              <input type="checkbox" id="mild" name="filters" value="Mild"><label for="mild">Mild Spicy</label>
+              <input type="checkbox" id="medium" name="filters" value="Medium"><label for="medium">Medium Spicy</label>
+              <input type="checkbox" id="hot" name="filters" value="Hot"><label for="hot">Hot</label>
+            </fieldset>
+          </form>
+        </li>
+      </ul>
+    </nav>
     {% endif %}
     {% for s, items in data.items() %}
+      {% if items %}
       <article class="item">
         <header>
           <div>
@@ -49,11 +66,11 @@
           <nav>
             <ul class="centre">
               {% if i['diet'] %}
-              <li class="diet"><img src="static/images/{{i['diet']}}.png" alt="{{i['diet']}}"
+              <li class="diet"><img src="../static/images/{{i['diet']}}.png" alt="{{i['diet']}}"
                  title="{{i['diet']}}" width="50" height="35"></li>
               {% endif %}
               {% if i['spicy'] %}
-              <li class="spicy"><img src="static/images/{{i['spicy']}}.png" alt="{{i['spicy']}}"
+              <li class="spicy"><img src="../static/images/{{i['spicy']}}.png" alt="{{i['spicy']}}"
                  title="{{i['spicy']}}" width="50" height="35"></li>
               {% endif %}
             </ul>
@@ -61,6 +78,7 @@
         </div>
         {% endfor %}
       </article>
+      {% endif %}
     {% endfor %}
     {% if not loop.last %}
       <hr>

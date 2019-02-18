@@ -3,9 +3,6 @@
 {% block head %}
   {{ super() }}
   <link rel="stylesheet" href="{{ url_for('static', filename='css/kitchen.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/lib/jquery-ui.min.css') }}">
-  <script src="{{ url_for('static', filename='js/lib/jquery.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/lib/jquery-ui.min.js') }}"></script>
   <script type="text/javascript">
     var ordersURL = '{{ url_for("kitchen.ordersByDate") }}';
     var showOrderURL = '{{ url_for("kitchen.showOrder") }}';

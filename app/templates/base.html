@@ -4,6 +4,9 @@
     {% block head %}
     <title>{% block title %}{% endblock %} | DROMS</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lib/jquery-ui.min.css') }}">
+    <script src="{{ url_for('static', filename='js/lib/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lib/jquery-ui.min.js') }}"></script>
     {% endblock %}
   </head>
   <body>

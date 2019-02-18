@@ -127,59 +127,6 @@ def get_menus():
         abort( 404, "No menus found." )
     return menus
 
-def edit_item(id, name, desc, cost, section, diet, spicy):
-    ''' updates a given item in the database '''
-    db = get_db()
-    db.execute(
-        'UPDATE item SET name=?, description=?,'
-        ' cost=?, section=?, diet=?, spicy=?'
-        ' WHERE id=?',
-        (name, desc, cost, section, diet, spicy, id)
-    )
-    db.commit()
-
-def delete_item(id):
-    ''' deletes an item in the database given its id '''
-    db = get_db()
-    db.execute(
-        'DELETE FROM item WHERE id=?', (id,)
-    )
-    db.commit()
-
-def edit_section(name, desc, section, menu):
-    ''' updates a given section in the database '''
-    db = get_db()
-    # update section table
-    db.execute(
-        'UPDATE section SET name=?, description=?'
-        ' WHERE name=? AND menu=?',
-        (name, desc, section, menu)
-    )
-    db.commit()
-    # update item table
-    db.execute(
-        'UPDATE item SET section=?'
-        ' WHERE section=?',
-        (name, section)
-    )
-    db.commit()
-
-def delete_section(section, menu):
-    ''' deletes the given section in the given menu along with its items '''
-    db = get_db()
-    # delete the section
-    db.execute(
-        'DELETE FROM section WHERE name=? AND menu=?',
-        (section, menu)
-    )
-    db.commit()
-    # delete all its items
-    db.execute(
-        'DELETE FROM item WHERE section=? AND menu=?',
-        (section, menu)
-    )
-    db.commit()
-
 def get_all_orders():
     ''' retrieves all orders '''
     db = get_db()
@@ -232,3 +179,56 @@ def get_tables(restName):
     if tables is None:
         abort(404, "No tables found for restaurant {}".format(restName))
     return tables
+
+def edit_item(id, name, desc, cost, section, diet, spicy):
+    ''' updates a given item in the database '''
+    db = get_db()
+    db.execute(
+        'UPDATE item SET name=?, description=?,'
+        ' cost=?, section=?, diet=?, spicy=?'
+        ' WHERE id=?',
+        (name, desc, cost, section, diet, spicy, id)
+    )
+    db.commit()
+
+def delete_item(id):
+    ''' deletes an item in the database given its id '''
+    db = get_db()
+    db.execute(
+        'DELETE FROM item WHERE id=?', (id,)
+    )
+    db.commit()
+
+def edit_section(name, desc, section, menu):
+    ''' updates a given section in the database '''
+    db = get_db()
+    # update section table
+    db.execute(
+        'UPDATE section SET name=?, description=?'
+        ' WHERE name=? AND menu=?',
+        (name, desc, section, menu)
+    )
+    db.commit()
+    # update item table
+    db.execute(
+        'UPDATE item SET section=?'
+        ' WHERE section=?',
+        (name, section)
+    )
+    db.commit()
+
+def delete_section(section, menu):
+    ''' deletes the given section in the given menu along with its items '''
+    db = get_db()
+    # delete the section
+    db.execute(
+        'DELETE FROM section WHERE name=? AND menu=?',
+        (section, menu)
+    )
+    db.commit()
+    # delete all its items
+    db.execute(
+        'DELETE FROM item WHERE section=? AND menu=?',
+        (section, menu)
+    )
+    db.commit()
