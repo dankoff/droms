@@ -29,6 +29,7 @@ CREATE TABLE custOrder (
   totalCost REAL NOT NULL,
   tableNo INTEGER NOT NULL,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  completed INTEGER NOT NULL DEFAULT 0,
   FOREIGN KEY (tableNo) REFERENCES restTable (tableNo)
 );
 
@@ -76,6 +77,8 @@ CREATE TABLE restaurant (
 CREATE TABLE restTable (
   tableNo INTEGER PRIMARY KEY AUTOINCREMENT,
   noOfSeats INTEGER NOT NULL,
+  seatsLeft INTEGER NOT NULL,
+  free INTEGER NOT NULL,
   restName TEXT NOT NULL,
   FOREIGN KEY (restName) REFERENCES restaurant (name)
 );

@@ -12,33 +12,26 @@ $(document).ready(function() {
     $.getJSON(ordersURL, {
       selDate: aDate
     }, function(data) {
-      $('#tblOrder tbody').empty();
+      $('#tblOrderComp tbody').empty();
+      $('#tblOrderPend tbody').empty();
       $.each(data, function(i, o) {
         var $tr = $('<tr>').append(
           $('<td>').append($('<a href="#"></a>').attr('id', 'order' + o.id).text(o.id)),
           $('<td>').text(o.tableNo),
           $('<td>').text(o.created)
         );
-        $('#tblOrder tbody').append($tr);
+        if (o.completed) {
+          $('#tblOrderComp tbody').append($tr);
+        } else {
+          $tr.append($('<td>').append($('<button type="button">Complete</button>').attr('id', 'btn'+o.id)));
+          $('#tblOrderPend tbody').append($tr);
+        }
       });
     });
     return false;
   }
 
-  // load orders on datepicker load
-  $(window).on('load', loadOrders);
-
-  // change date event
-  $('#date').on('change', function() {
-    $('#tblItem tbody').empty();
-    loadOrders();
-  });
-
-  // reload orders every 3 secs
-  window.setInterval(loadOrders, 3000);
-
-  // select order event
-  $("#tblOrder tbody").on('click', 'a', function() {
+  function showOrderDetails() {
     $.getJSON(showOrderURL, {
       orderId: $(this).text()
     }, function(data) {
@@ -80,6 +73,30 @@ $(document).ready(function() {
         );
         $('#tblItem tbody').append($tr);
       });
+    });
+    return false;
+  }
+
+  // load orders on datepicker load
+  $(window).on('load', loadOrders);
+
+  // change date event
+  $('#date').on('change', function() {
+    $('#tblItem tbody').empty();
+    loadOrders();
+  });
+
+  // reload orders every 3 secs
+  window.setInterval(loadOrders, 3000);
+
+  // select order event
+  $("#tblOrderComp tbody").on('click', 'a', showOrderDetails);
+  $("#tblOrderPend tbody").on('click', 'a', showOrderDetails);
+  $("#tblOrderPend tbody").on('click', 'button', function() {
+    $.getJSON(completeOrderURL, {
+      orderId: $(this).attr('id').replace('btn', '')
+    }).done(function() {
+      loadOrders();
     });
     return false;
   });

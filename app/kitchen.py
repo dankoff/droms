@@ -5,7 +5,7 @@ from werkzeug.exceptions import abort
 from datetime import date
 from app.db import get_db
 from app.auth import login_required
-from app.util import get_all_orders, get_orders_by_date, get_order_by_id
+from app.util import get_all_orders, get_orders_by_date, get_order_by_id, complete_order
 
 bp = Blueprint('kitchen', __name__, url_prefix='/kitchen',
                 static_folder='static')
@@ -14,6 +14,13 @@ bp = Blueprint('kitchen', __name__, url_prefix='/kitchen',
 @login_required(types=['Manager', 'Cook'])
 def home():
     return render_template( 'kitchen/kitchen.html' )
+
+@bp.route('/order/complete')
+@login_required(types=['Cook'])
+def completeOrder():
+    id = request.args.get('orderId')
+    if id:
+        complete_order(id)
 
 @bp.route('/order')
 @login_required(types=['Manager', 'Cook'])
@@ -38,7 +45,8 @@ def showOrders(aDate=None):
     data = []
     for o in orders:
         data.append(dict(id=o['id'], tableNo=o['tableNo'],
-                             created=o['created'].strftime('%-d %b %Y at %H:%M:%S')))
+                             created=o['created'].strftime('%-d %b %Y at %H:%M:%S'),
+                             completed=o['completed']))
     return data
 
 def itemsByOrder(id):

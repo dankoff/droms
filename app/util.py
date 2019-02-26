@@ -146,7 +146,7 @@ def get_orders_by_date(date=None):
     if date:
         db = get_db()
         orders = db.execute(
-            'SELECT id, tableNo, created'
+            'SELECT id, tableNo, created, completed'
             ' FROM custOrder'
             ' WHERE created LIKE ?', (date+'%',)
         ).fetchall()
@@ -230,5 +230,15 @@ def delete_section(section, menu):
     db.execute(
         'DELETE FROM item WHERE section=? AND menu=?',
         (section, menu)
+    )
+    db.commit()
+
+def complete_order(orderId):
+    db = get_db()
+    # update custOrder table
+    db.execute(
+        'UPDATE custOrder SET completed=?'
+        ' WHERE id=?',
+        (1, orderId)
     )
     db.commit()

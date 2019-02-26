@@ -1,21 +1,16 @@
 table.item {
-  table-layout: fixed;
   width: 80%;
   margin-left:10%;
   margin-right:10%;
-  border-collapse: collapse;
-}
-
-table.order {
-  table-layout: fixed;
-  width: 50%;
-  margin-left: 40%;
-  margin-right: 10%;
-  border-collapse: collapse;
 }
 
 html {
   font-family: 'helvetica neue', helvetica, arial, sans-serif;
+}
+
+table {
+  table-layout: fixed;
+  border-collapse: collapse;
 }
 
 th {

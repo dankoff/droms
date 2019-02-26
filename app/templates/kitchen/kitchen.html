@@ -6,6 +6,7 @@
   <script type="text/javascript">
     var ordersURL = '{{ url_for("kitchen.ordersByDate") }}';
     var showOrderURL = '{{ url_for("kitchen.showOrder") }}';
+    var completeOrderURL = '{{ url_for("kitchen.completeOrder") }}';
   </script>
   <script src="{{ url_for('static', filename='js/kitchen.js') }}"></script>
 {% endblock %}
@@ -18,17 +19,36 @@
   <p>Date: <input type="text" name="date" id="date"
     placeholder="Click to select a date" readonly value="">
   </p>
-  <table class="order" id="tblOrder">
-    <thead class="orders">
-      <tr>
-        <th class="orders">Order #</th>
-        <th class="orders">Table #</th>
-        <th class="orders">Date and Time</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
+  <div>
+    <h2 style='float: left;'>Pending Orders</h2>
+    <h2 style='float: right;'>Completed Orders</h2>
+  </div>
+  <div style="clear: both;"></div>
+  <div>
+    <table style="float: left;" id="tblOrderPend">
+      <thead>
+        <tr>
+          <th>Order#</th>
+          <th>Table#</th>
+          <th>Date & Time</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <table style='float: right' id="tblOrderComp">
+      <thead class="orders">
+        <tr>
+          <th>Order#</th>
+          <th>Table#</th>
+          <th>Date & Time</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div style="clear: both;"></div>
+  <h2>Order Details</h2>
   <table class="item" id="tblItem">
     <thead class="items">
       <tr>
