@@ -3,6 +3,7 @@ Utility functions
 '''
 from app.db import get_db
 from werkzeug.exceptions import abort
+from datetime import date
 
 def get_menus_data():
     ''' returns a dict as described below
@@ -234,6 +235,7 @@ def delete_section(section, menu):
     db.commit()
 
 def complete_order(orderId):
+    ''' marks a pending order as complete '''
     db = get_db()
     # update custOrder table
     db.execute(
@@ -242,3 +244,17 @@ def complete_order(orderId):
         (1, orderId)
     )
     db.commit()
+
+def generate_bill(tblNo, ip):
+    ''' pulls all items ordered by the customer for the day '''
+    today = '2019-02-27'#date.today().strftime('%Y-%m-%d')
+    db = get_db()
+    # get all items ordered today for the given ip address, i.e. customer
+    billItems = db.execute(
+        'SELECT name, description, diet, spicy, quantity, cost'
+        ' FROM orderDetail o'
+        ' JOIN item i ON o.itemId = i.id'
+        ' JOIN custOrder co ON o.orderId = co.id'
+        ' WHERE co.custIP=? AND co.tableNo=? AND created LIKE ?', (ip, tblNo, today+'%')
+    ).fetchall()
+    return billItems

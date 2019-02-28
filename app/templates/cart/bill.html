@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bill.css') }}">
+{% endblock %}
+
+{% block header %}
+  <h1>{% block title %}My Bill{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% set billTotal = [0] %}
+  <table>
+    <thead>
+      <tr>
+        <th>Item Description</th>
+        <th>Quantity</th>
+        <th>Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% if items %}
+    {% for n, i in items.items() %}
+      <tr>
+        <td>
+          {{ n }}<br>
+          <p class="desc">{{ i['desc']}}</p>
+          {% if i['diet'] %}
+          <img src="../../static/images/{{i['diet']}}.png" alt="{{i['diet']}}"
+             title="{{i['diet']}}" width="50" height="35">
+          {% endif %}
+          {% if i['spicy'] %}
+          <img src="../../static/images/{{i['spicy']}}.png" alt="{{i['spicy']}}"
+             title="{{i['spicy']}}" width="50" height="35">
+          {% endif %}
+        </td>
+        <td>{{ i['qty'] }}</td>
+        {% if billTotal.append(billTotal.pop() + i['cost']) %}{% endif %}
+        <td>{{ "£%.2f" | format(i['cost']) }}</td>
+      </div>
+    {% endfor %}
+    {% endif %}
+    </tbody>
+  </table>
+  <form method="get">
+    <div>
+      <div style="float: left;">
+        <h2>Bill Total</h2>
+        <span>{{ "£%.2f" | format(billTotal[0]) }}</span>
+      </div>
+      <div style="float: right;">
+        <button class="btn" type="button">Request to Pay</button>
+      </div>
+    </div>
+  </form>
+{% endblock %}

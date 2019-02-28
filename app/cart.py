@@ -36,6 +36,20 @@ def add_to_cart(item_id):
 
     return redirect( url_for('menu.index') )
 
+@bp.route('/view_bill/table_<int:tblNo>/<ip>')
+def view_bill(tblNo, ip):
+    itemsByName = {}
+    billItems = util.generate_bill(tblNo, ip)
+    for i in billItems:
+        if i['name'] not in itemsByName:
+            itemsByName[i['name']] = { 'desc' : i['description'], 'cost' : i['cost'] * i['quantity'], \
+            'qty' : i['quantity'], 'diet' : i['diet'], 'spicy' : i['spicy'] }
+        else:
+            qty = itemsByName[i['name']]['qty'] + i['quantity']
+            itemsByName[i['name']]['qty'] = qty
+            itemsByName[i['name']]['cost'] = i['cost'] * qty
+    return render_template( 'cart/bill.html', items=itemsByName )
+
 @bp.route('/make_order/<float:total>')
 def make_order(total):
     ''' store customer order details to the database '''
@@ -45,7 +59,7 @@ def make_order(total):
         return redirect( url_for('index') )
     if 'cart' in session:
         db = get_db()
-        custIP = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+        custIP = session.get('custIP', request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
         orderId = db.execute(
             'INSERT INTO custOrder'
             ' (custIP, totalCost, tableNo)'

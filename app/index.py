@@ -9,6 +9,9 @@ bp = Blueprint('index', __name__)
 
 @bp.route('/')
 def index():
+    if 'custIP' not in session:
+        visitorIP = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+        session['custIP'] = visitorIP
     tables = get_tables('restaurant one')
     return render_template('index.html', tables=tables)
 

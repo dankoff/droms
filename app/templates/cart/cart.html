@@ -13,7 +13,7 @@
 
 {% block content %}
   <form method="post">
-    <div class="cart">
+    <div>
       {% if items %}
       {% for i in items %}
         <div class="item">
@@ -26,6 +26,7 @@
           <div class="description">
             <span>{{ i['name'] }}</span>
             <span>{{ i['description'] }}</span>
+            <span class="cost">{{ "£%.2f"|format(i['cost']) }}</span>
             <div class="diet_spicy">
               <nav>
                 <ul>
@@ -40,7 +41,6 @@
                 </ul>
               </nav>
             </div>
-            <span class="cost">{{ "£%.2f"|format(i['cost']) }}</span>
           </div>
           <div class="quantity" id="{{ i['id'] }}">
             <button class="plus-btn" type="button" name="button"
@@ -57,10 +57,10 @@
         </div>
       {% endfor %}
       {% endif %}
-      <div class="cart-total">
+      <div>
         <div style="float: left;">
           <h2>Order Total</h2>
-          <span class="cart-total-cost">
+          <span>
             {% set totalCost = session['cart'] | sum(attribute='total_cost') %}
             {{ "£%.2f" | format(totalCost) }}
           </span>
