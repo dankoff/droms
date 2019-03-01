@@ -11,6 +11,14 @@ flask run
 
 // SQL ALTER TABLE
 
+// Add column
+
+ALTER TABLE table_name
+  ADD col_name datatype [ NULL | NOT NULL ];
+
+
+// Modify table
+
 PRAGMA foreign_keys=off;
 
 BEGIN TRANSACTION;

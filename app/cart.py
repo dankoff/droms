@@ -3,7 +3,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 from app.db import get_db
-import app.util as util
+from app.util import get_item_by_id, generate_bill, pay_bill
 
 bp = Blueprint('cart', __name__)
 
@@ -14,10 +14,10 @@ def view_cart():
         return render_template( 'cart/cart.html', items=items_by_id )
     return redirect( url_for('menu.index') )
 
-@bp.route('/add_to_cart/<int:item_id>')
+@bp.route('/add_to_cart/item_<int:item_id>')
 def add_to_cart(item_id):
     ''' adds the item with the given id to the order '''
-    i = util.get_item_by_id(item_id)
+    i = get_item_by_id(item_id)
     if i:
         item_id = str(item_id)
         item_details = { 'name' : i['name'], 'description' : i['description'], \
@@ -36,21 +36,7 @@ def add_to_cart(item_id):
 
     return redirect( url_for('menu.index') )
 
-@bp.route('/view_bill/table_<int:tblNo>/<ip>')
-def view_bill(tblNo, ip):
-    itemsByName = {}
-    billItems = util.generate_bill(tblNo, ip)
-    for i in billItems:
-        if i['name'] not in itemsByName:
-            itemsByName[i['name']] = { 'desc' : i['description'], 'cost' : i['cost'] * i['quantity'], \
-            'qty' : i['quantity'], 'diet' : i['diet'], 'spicy' : i['spicy'] }
-        else:
-            qty = itemsByName[i['name']]['qty'] + i['quantity']
-            itemsByName[i['name']]['qty'] = qty
-            itemsByName[i['name']]['cost'] = i['cost'] * qty
-    return render_template( 'cart/bill.html', items=itemsByName )
-
-@bp.route('/make_order/<float:total>')
+@bp.route('/make_order/total_<float:total>')
 def make_order(total):
     ''' store customer order details to the database '''
     # ensure user has selected a table first
@@ -80,7 +66,7 @@ def make_order(total):
             flash("Order submitted!")
     return redirect( url_for('cart.view_cart') )
 
-@bp.route('/update_cart/<int:id>/<action>')
+@bp.route('/update_cart/item_<int:id>/action_<action>')
 def update_cart(id, action):
     ''' updates the order for the item with the given id and action to perform '''
     if 'cart' in session:
@@ -108,3 +94,40 @@ def updateQuantity(item_idx, action):
             session['cart'][item_idx]['qty'] -= 1
             session['cart'][item_idx]['total_cost'] -= cost
             session.modified = True
+
+@bp.route('/view_bill', methods=('GET', 'POST'))
+def view_bill():
+    ''' retrieves and groups the currently unpaid items to generate a bill '''
+    itemsByName = {}
+    tblNo = session.get('tableNo', None)
+    custIP = session.get('custIP', request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
+    billItems = generate_bill(tblNo, custIP)
+    if request.method == 'POST':
+        request_bill(billItems)
+    else:
+        if billItems is not None:
+            itemsByName = groupBillItems(billItems)
+    return render_template( 'cart/bill.html', items=itemsByName )
+
+def groupBillItems(billItems):
+    ''' group the bill items in a dictionary ensuring
+        identical items are not shown separately
+    '''
+    itemsByName = {}
+    for i in billItems:
+        if i['name'] not in itemsByName:
+            itemsByName[i['name']] = { 'desc' : i['description'], 'cost' : i['cost'] * i['quantity'], \
+            'qty' : i['quantity'], 'diet' : i['diet'], 'spicy' : i['spicy'] }
+        else:
+            qty = itemsByName[i['name']]['qty'] + i['quantity']
+            itemsByName[i['name']]['qty'] = qty
+            itemsByName[i['name']]['cost'] = i['cost'] * qty
+    return itemsByName
+
+def request_bill(billItems):
+    ''' marks the orders associated with the given items as paid '''
+    orderIDs = set([ i['id'] for i in billItems ])
+    if orderIDs:
+        # there are unpaid items
+        pay_bill(orderIDs)
+        flash('Thank you, a member of the waiting staff will be with you shortly.')

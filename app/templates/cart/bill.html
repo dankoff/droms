@@ -11,6 +11,7 @@
 
 {% block content %}
   {% set billTotal = [0] %}
+  {% if items %}
   <table>
     <thead>
       <tr>
@@ -20,7 +21,6 @@
       </tr>
     </thead>
     <tbody>
-    {% if items %}
     {% for n, i in items.items() %}
       <tr>
         <td>
@@ -40,18 +40,22 @@
         <td>{{ "£%.2f" | format(i['cost']) }}</td>
       </div>
     {% endfor %}
-    {% endif %}
     </tbody>
   </table>
-  <form method="get">
+  {% else %}
+  <p>You have no unpaid orders.</p>
+  {% endif %}
+  <form method="post">
     <div>
       <div style="float: left;">
         <h2>Bill Total</h2>
         <span>{{ "£%.2f" | format(billTotal[0]) }}</span>
       </div>
       <div style="float: right;">
-        <button class="btn" type="button">Request to Pay</button>
+        <input class="btn" type="submit" value="Request to Pay" name="btnPay"
+        onclick="return confirm('Are you sure you would like to pay the bill?');"/>
       </div>
     </div>
+    <div style="clear: both;"></div>
   </form>
 {% endblock %}

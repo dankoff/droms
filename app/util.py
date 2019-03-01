@@ -245,16 +245,27 @@ def complete_order(orderId):
     )
     db.commit()
 
+def pay_bill(orderIDs):
+    ''' marks the given orders as paid '''
+    db = get_db()
+    for id in orderIDs:
+        db.execute(
+            'UPDATE custOrder SET paid=? WHERE id=?',
+            (1, id)
+        )
+        db.commit()
+
 def generate_bill(tblNo, ip):
     ''' pulls all items ordered by the customer for the day '''
-    today = '2019-02-27'#date.today().strftime('%Y-%m-%d')
+    today = date.today().strftime('%Y-%m-%d')
     db = get_db()
     # get all items ordered today for the given ip address, i.e. customer
     billItems = db.execute(
-        'SELECT name, description, diet, spicy, quantity, cost'
+        'SELECT co.id, name, description, diet, spicy, quantity, cost, paid'
         ' FROM orderDetail o'
         ' JOIN item i ON o.itemId = i.id'
         ' JOIN custOrder co ON o.orderId = co.id'
-        ' WHERE co.custIP=? AND co.tableNo=? AND created LIKE ?', (ip, tblNo, today+'%')
+        ' WHERE co.custIP=? AND co.tableNo=? AND created LIKE ?'
+        ' AND paid=?', (ip, tblNo, today+'%', 0)
     ).fetchall()
     return billItems

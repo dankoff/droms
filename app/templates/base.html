@@ -17,7 +17,7 @@
         {% if session.get('tableNo', none) %}
         <li class="navigation">Table No: {{ session['tableNo'] }}</li>
         <li><h3><a href="{{ url_for('index.free_seat', tableNo=session['tableNo']) }}">Free Seat</a></h3></li>
-        <li><h3><a href="{{ url_for('cart.view_bill', ip=session['custIP'], tblNo=session['tableNo']) }}">View Bill</a></h3></li>
+        <li><h3><a href="{{ url_for('cart.view_bill') }}">View Bill</a></h3></li>
         {% endif %}
         <li><h3><a href="{{ url_for('index') }}">View Tables</a></h3></li>
         <li class="navigation">[{{ session['cart'] | sum(attribute='qty') }}]</li>

@@ -15,9 +15,11 @@ def index():
     tables = get_tables('restaurant one')
     return render_template('index.html', tables=tables)
 
-@bp.route('/freeseat/table_<int:tableNo>')
-def free_seat(tableNo):
-    freeSeat(tableNo)
+@bp.route('/freeseat')
+def free_seat():
+    tblNo = session.get('tableNo', None)
+    if tblNo:
+        freeSeat(tblNo)
     return redirect( url_for('index') )
 
 @bp.route('/table_selection/table_<int:id>-seats_<int:seatsLeft>')
