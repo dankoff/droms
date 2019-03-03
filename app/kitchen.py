@@ -55,7 +55,7 @@ def itemsByOrder(id):
     for i in orderDetails:
         item_details = { 'orderId' : i['orderId'], 'tableNo' : i['tableNo'],
                          'created' : i['created'].strftime('%-d %b %Y at %H:%M:%S'),
-                         'name' : i['name'], 'diet' : i['diet'],
+                         'name' : i['name'], 'diet' : i['diet'], 'desc' : i['description'],
                          'spicy' : i['spicy'], 'quantity' : i['quantity'] }
         itemsByOrder.append(item_details)
     return itemsByOrder

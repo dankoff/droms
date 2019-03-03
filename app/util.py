@@ -159,7 +159,7 @@ def get_order_by_id(id):
     ''' retrieves order details for the given order id '''
     db = get_db()
     order = db.execute(
-        'SELECT orderId, itemId, tableNo, created, name, diet, spicy, quantity'
+        'SELECT orderId, itemId, tableNo, created, name, description, diet, spicy, quantity'
         ' FROM orderDetail o'
         ' JOIN item i ON o.itemId = i.id'
         ' JOIN custOrder co ON o.orderId = co.id'

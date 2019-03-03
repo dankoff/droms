@@ -44,21 +44,19 @@ $(document).ready(function() {
             $('<td>').text(o.tableNo),
             $('<td>').text(o.created),
             $('<td>'),
-            $('<td>'),
             $('<td>')
           );
           $('#tblItem tbody').append($tr);
         }
 
-        var $diet = $('<td>');
+        var $itemDetails = $('<td>').append($('<b>').text(o.name)).append($('<br>')).append($('<p class="desc">').text(o.desc));
         if (o.diet) {
-          $diet.append($('<img width="50" height="35">').attr('src',
+          $itemDetails.append($('<img width="50" height="35">').attr('src',
                             '../static/images/!.png'.replace('!', o.diet))
                             .attr('alt', o.diet).attr('title', o.diet));
         }
-        var $spicy = $('<td>');
         if (o.spicy) {
-          $spicy.append($('<img width="50" height="35">').attr('src',
+          $itemDetails.append($('<img width="50" height="35">').attr('src',
                             '../static/images/!.png'.replace('!', o.spicy))
                             .attr('alt', o.spicy).attr('title', o.spicy));
         }
@@ -67,9 +65,8 @@ $(document).ready(function() {
           $('<td>'),
           $('<td>'),
           $('<td>'),
-          $('<td>').append($('<b>').text(o.quantity + ' x ')).append($('<i>').text(o.name)),
-          $diet,
-          $spicy
+          $itemDetails,
+          $('<td>').append(o.quantity)
         );
         $('#tblItem tbody').append($tr);
       });
