@@ -7,18 +7,53 @@
     var ordersURL = '{{ url_for("kitchen.ordersByDate") }}';
     var showOrderURL = '{{ url_for("kitchen.showOrder") }}';
     var completeOrderURL = '{{ url_for("kitchen.completeOrder") }}';
+    var sendMessageURL = '{{ url_for("kitchen.send_message") }}';
+    var loadMessagesURL = '{{ url_for("kitchen.loadMessages") }}';
+    var incWorkPlace = {{ g.user["type"]|tojson }} === "Cook" ? 'Bar' : 'Kitchen';
+    var msgSrc = {{ g.user["type"]|tojson }} === "Cook" ? 'Kitchen' : 'Bar';
   </script>
   <script src="{{ url_for('static', filename='js/kitchen.js') }}"></script>
 {% endblock %}
 
 {% block header %}
-  <h1>{% block title %}Orders{% endblock %}</h1>
+  <h1>{% block title %}Portal{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  <p>Date: <input type="text" name="date" id="date"
-    placeholder="Click to select a date" readonly value="">
-  </p>
+{% set workPlace = 'Bar' if g.user['type'] == 'Cook' else 'Kitchen' %}
+  <div style="float: left;">
+    <p>Date: <input type="text" name="date" id="date"
+      placeholder="Click to select a date" readonly value="">
+    </p>
+    {% if g.user['type'] in ['Cook', 'Waiter'] %}
+    <fieldset id="actions">
+      <legend>Actions</legend>
+      <span>
+        {% if g.user['type'] == 'Cook' %}
+        <button class="btn" id="btnCall" type="button">Call Waiter</button>
+        <button class="btn" id="btnNotRdy" type="button">Not Ready</button>
+        {% elif g.user['type'] == 'Waiter' %}
+        <button style="width: 200px;" class="btn" id="btnRdy" type="button">Ready?</button>
+        {% endif %}
+      </span>
+      <p class="warning"></p>
+    </fieldset>
+    {% endif %}
+  </div>
+  <div style="float: right;">
+    <fieldset id="messages">
+      <legend>Messages</legend>
+      <div style="float: left;">
+        <label for="incomingMsgs">{{ workPlace }}</label><br>
+        <textarea name="txtInc" id="txtInc"></textarea>
+      </div>
+      <div style="float: right;">
+        <label for="outgoingMsgs">Sent Messages</label><br>
+        <textarea name="txtOut" id="txtOut"></textarea>
+      </div>
+    </fieldset>
+  </div>
+  <div style="clear: both;"></div>
   <div>
     <h2 style='float: left;'>Pending Orders</h2>
     <h2 style='float: right;'>Completed Orders</h2>

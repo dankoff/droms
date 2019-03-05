@@ -29,9 +29,7 @@
           {% if g.user['type'] == 'Manager' %}
           <li><h3><a href="{{ url_for('auth.register') }}">Register</a></h3></li>
           {% endif %}
-          {% if g.user['type'] in ['Manager', 'Cook'] %}
-          <li><h3><a href="{{ url_for('kitchen.home') }}">Orders</a></h3></li>
-          {% endif %}
+          <li><h3><a href="{{ url_for('kitchen.home') }}">Portal</a></h3></li>
         {% else %}
           <li><h3><a href="{{ url_for('auth.login') }}">Login</a></h3></li>
         {% endif %}

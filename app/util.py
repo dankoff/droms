@@ -269,3 +269,24 @@ def generate_bill(tblNo, ip):
         ' AND paid=?', (ip, tblNo, today+'%', 0)
     ).fetchall()
     return billItems
+
+def save_message(src, msg):
+    ''' stores the given message to the database '''
+    db = get_db()
+    db.execute(
+        'INSERT INTO communication (source, message)'
+        ' VALUES (?,?)', (src, msg)
+    )
+    db.commit()
+
+def get_last3_messages(src):
+    ''' gets the last 3 saved messages by src from the communication table '''
+    today = date.today().strftime('%Y-%m-%d')
+    db = get_db()
+    msgs = db.execute(
+        'SELECT timeSent, message FROM communication'
+        ' WHERE source=? AND timeSent LIKE ?'
+        ' ORDER BY timeSent DESC LIMIT 3',
+        (src, today + '%')
+    ).fetchall()
+    return msgs

@@ -68,7 +68,7 @@ def login():
             # free seat if user successfully logs in
             if 'tableNo' in session:
                 freeSeat(session['tableNo'])
-            if user['type'] == 'Cook':
+            if user['type'] in ['Cook', 'Waiter']:
                 return redirect(url_for('kitchen.home'))
             else:
                 return redirect(url_for('menu.index'))

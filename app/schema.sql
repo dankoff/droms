@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS menu;
 DROP TABLE IF EXISTS staff;
 DROP TABLE IF EXISTS workPlace;
 DROP TABLE IF EXISTS restaurant;
+DROP TABLE IF EXISTS communication;
 
 CREATE TABLE staff (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,6 +22,14 @@ CREATE TABLE workPlace (
   name TEXT PRIMARY KEY,
   restName TEXT NOT NULL,
   FOREIGN KEY (restName) REFERENCES restaurant (name)
+);
+
+CREATE TABLE communication (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  source TEXT NOT NULL,
+  timeSent TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  message TEXT,
+  FOREIGN KEY (source) REFERENCES workPlace (name)
 );
 
 CREATE TABLE custOrder (
