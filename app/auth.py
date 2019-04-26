@@ -13,6 +13,10 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     ''' View func for registering a new user '''
+    if not g.user:
+        return redirect(url_for('auth.login'))
+    elif g.user['type'] != 'Manager':
+        return redirect(url_for('kitchen.home'))
     work_places = get_work_places()
     if request.method == 'POST':
         username = request.form.get('username')
@@ -48,6 +52,8 @@ def register():
 @bp.route('/login', methods=['GET','POST'])
 def login():
     """ View func for logging in a user """
+    if g.user:
+        return redirect(url_for('kitchen.home'))
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')

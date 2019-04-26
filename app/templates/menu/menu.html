@@ -5,6 +5,10 @@
   <script src="{{ url_for('static', filename='js/menu.js') }}"></script>
 {% endblock %}
 
+{% block header %}
+  <h1>{% block title %}Menus{% endblock %}</h1>
+{% endblock %}
+
 {% block content %}
   </br>
   {% for m, data in menu_data.items() %}

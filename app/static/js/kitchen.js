@@ -19,7 +19,9 @@ $(document).ready(function() {
       if (o.completed) {
         $('#tblOrderComp tbody').append($tr);
       } else {
-        $tr.append($('<td>').append($('<button type="button">Complete</button>').attr('id', 'btn'+o.id)));
+        if (loggedUser === "Cook") {
+          $tr.append($('<td>').append($('<button type="button">Complete</button>').attr('id', 'btn'+o.id)));
+        }
         $('#tblOrderPend tbody').append($tr);
       }
     });

@@ -11,6 +11,7 @@
     var loadMessagesURL = '{{ url_for("kitchen.loadMessages") }}';
     var incWorkPlace = {{ g.user["type"]|tojson }} === "Cook" ? 'Bar' : 'Kitchen';
     var msgSrc = {{ g.user["type"]|tojson }} === "Cook" ? 'Kitchen' : 'Bar';
+    var loggedUser = {{ g.user["type"]|tojson }};
   </script>
   <script src="{{ url_for('static', filename='js/kitchen.js') }}"></script>
 {% endblock %}
@@ -22,9 +23,11 @@
 {% block content %}
 {% set workPlace = 'Bar' if g.user['type'] == 'Cook' else 'Kitchen' %}
   <div style="float: left;">
+    {% if g.user['type'] == 'Manager' %}
     <p>Date: <input type="text" name="date" id="date"
       placeholder="Click to select a date" readonly value="">
     </p>
+    {% endif %}
     {% if g.user['type'] in ['Cook', 'Waiter'] %}
     <fieldset id="actions">
       <legend>Actions</legend>
