@@ -22,6 +22,7 @@
 
 {% block content %}
 {% set workPlace = 'Bar' if g.user['type'] == 'Cook' else 'Kitchen' %}
+{% set outgoingMsgLabel = 'Bar' if g.user['type'] == 'Manager' else 'Sent Messages' %}
   <div style="float: left;">
     {% if g.user['type'] == 'Manager' %}
     <p>Date: <input type="text" name="date" id="date"
@@ -51,7 +52,7 @@
         <textarea name="txtInc" id="txtInc"></textarea>
       </div>
       <div style="float: right;">
-        <label for="outgoingMsgs">Sent Messages</label><br>
+        <label for="outgoingMsgs">{{ outgoingMsgLabel }}</label><br>
         <textarea name="txtOut" id="txtOut"></textarea>
       </div>
     </fieldset>
