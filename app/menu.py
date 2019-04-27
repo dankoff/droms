@@ -16,6 +16,26 @@ def index():
         meny_data = filter_menu_data(menu_data, filters)
     return render_template('menu/menu.html', menu_data=menu_data)
 
+@bp.route('/create_menu', methods=('GET', 'POST'))
+@login_required(types=['Manager'])
+def create_menu():
+    ''' creates a new menu '''
+    restaurants = [ res['name'] for res in util.get_restaurants() ]
+    if request.method == 'POST':
+        name = request.form['name']
+        desc = request.form['description']
+        restaurant = request.form['restaurant']
+
+        db = get_db()
+        db.execute(
+            'INSERT INTO menu (name, description, restName)'
+            ' VALUES (?,?,?)',
+            (name, desc, restaurant)
+        )
+        db.commit()
+        return redirect( url_for('.index') )
+    return render_template( 'menu/create_menu.html', restaurants=restaurants )
+
 @bp.route('/<menu>/add_section', methods=('GET', 'POST'))
 @login_required(types=['Manager'])
 def add_section(menu):

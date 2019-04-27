@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block header %}
+  <h1>{% block title %}Create Menu{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+  <form method="post">
+    <label for="name">Name</label>
+    <input name="name" id="name" value="{{ request.form['name'] }}" required>
+    <br>
+    <label for="description">Description</label>
+    <textarea name="description" id="description">{{ request.form['description'] }}</textarea>
+    </br>
+    <label for="restaurant">Restaurant</label>
+    <select name="restaurant" id="restaurant" required>
+      <option value="">Select a restaurant</option>
+      {% for res in restaurants %}
+        <option value="{{ res }}">{{ res }}</option>
+      {% endfor %}
+    </select>
+    </br>
+    <input type="submit" value="Create">
+  </form>
+
+{% endblock %}

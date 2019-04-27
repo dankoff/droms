@@ -128,6 +128,15 @@ def get_menus():
         abort( 404, "No menus found." )
     return menus
 
+def get_restaurants():
+    ''' returns all restaurant records '''
+    restaurants = get_db().execute(
+        'SELECT * FROM restaurant'
+    ).fetchall()
+    if restaurants is None:
+        abort( 404, "No restaurants exist." )
+    return restaurants
+
 def get_all_orders():
     ''' retrieves all orders '''
     db = get_db()

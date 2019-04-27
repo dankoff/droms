@@ -27,6 +27,7 @@
           <li class="navigation"><i>Welcome {{ g.user['username'] }}</i></li>
           <li><h3><a href="{{ url_for('auth.logout') }}">Logout</a></h3></li>
           {% if g.user['type'] == 'Manager' %}
+          <li><h3><a href="{{ url_for('menu.create_menu') }}">Create Menu</a></h3></li>
           <li><h3><a href="{{ url_for('auth.register') }}">Register</a></h3></li>
           {% endif %}
           <li><h3><a href="{{ url_for('kitchen.home') }}">Portal</a></h3></li>
