@@ -13,7 +13,7 @@ def index():
     menu_data = util.get_menus_data()
     if request.method == 'POST':
         filters = request.form.getlist('filters') # list of filters
-        meny_data = filter_menu_data(menu_data, filters)
+        menu_data = filter_menu_data(menu_data, filters)
     return render_template('menu/menu.html', menu_data=menu_data)
 
 @bp.route('/create_menu', methods=('GET', 'POST'))
