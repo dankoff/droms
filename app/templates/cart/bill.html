@@ -50,6 +50,7 @@
       <div style="float: left;">
         <h2>Bill Total</h2>
         <span>{{ "£%.2f" | format(billTotal[0]) }}</span>
+        <input type="hidden" name="bill_total" value="{{ billTotal[0] }}">
       </div>
       <div style="float: right;">
         <input class="btn" type="submit" value="Request to Pay" name="btnPay"

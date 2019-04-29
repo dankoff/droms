@@ -3,7 +3,7 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 from app.db import get_db
-from app.util import get_item_by_id, generate_bill, pay_bill
+from app.util import get_item_by_id, generate_bill, pay_bill, save_message
 
 bp = Blueprint('cart', __name__)
 
@@ -103,7 +103,8 @@ def view_bill():
     custIP = session.get('custIP', request.environ.get('HTTP_X_REAL_IP', request.remote_addr))
     billItems = generate_bill(tblNo, custIP)
     if request.method == 'POST':
-        request_bill(billItems)
+        billTotal = request.form['bill_total']
+        request_bill(billItems, billTotal)
     else:
         if billItems is not None:
             itemsByName = groupBillItems(billItems)
@@ -124,10 +125,13 @@ def groupBillItems(billItems):
             itemsByName[i['name']]['cost'] = i['cost'] * qty
     return itemsByName
 
-def request_bill(billItems):
+def request_bill(billItems, billTotal):
     ''' marks the orders associated with the given items as paid '''
     orderIDs = set([ i['id'] for i in billItems ])
     if orderIDs:
         # there are unpaid items
         pay_bill(orderIDs)
+        msg = 'A customer from table {} has requested the bill totalling £{:.2f}'.format( \
+        session.get('tableNo', None), float(billTotal) )
+        save_message('Kitchen', msg)
         flash('Thank you, a member of the waiting staff will be with you shortly.')
