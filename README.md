@@ -64,7 +64,7 @@ password: 123456
 ## Test
 
 ```
-pip install '.[test]'
+pip install pytest coverage
 pytest
 ```
 
