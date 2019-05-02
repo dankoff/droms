@@ -78,7 +78,7 @@ def test_ordersByDate(client, auth, order):
 
 def test_message_invalid_user(client, auth):
     auth.login('manager', '123456')
-    r = client.get('/kitchen/home/messages')
+    r = client.get('/kitchen/home/send_message')
     r.status_code == 302
     r.headers['Location'] == 'http://localhost/menu/'
 
