@@ -29,7 +29,7 @@
         {% if t['seatsLeft'] > 0 %}
         <button id="btn{{t['tableNo']}}" type="button"
           onclick="window.location.href='{{ url_for('index.table_selection',
-          id=t['tableNo'], seatsLeft=t['seatsLeft']) }}'">
+          id=t['tableNo']) }}'">
           Select
         </button>
         {% else %}

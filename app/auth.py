@@ -44,7 +44,7 @@ def register():
                 (username, generate_password_hash(password), staffType, workPlace)
             )
             db.commit()
-            return redirect(url_for('menu.index'))
+            return redirect(url_for('kitchen.home'))
 
         flash(error)
     return render_template('auth/register.html', work_places=work_places)
@@ -74,10 +74,7 @@ def login():
             # free seat if user successfully logs in
             if 'tableNo' in session:
                 freeSeat(session['tableNo'])
-            if user['type'] in ['Cook', 'Waiter']:
-                return redirect(url_for('kitchen.home'))
-            else:
-                return redirect(url_for('menu.index'))
+            return redirect(url_for('kitchen.home'))
 
         flash(error)
 
@@ -97,7 +94,7 @@ def load_logged_in_user():
 @bp.route('/logout')
 def logout():
     session.pop('user_id', None)
-    return redirect(url_for('menu.index'))
+    return redirect(url_for('.login'))
 
 def login_required(types=None):
     def wrapper(view):

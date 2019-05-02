@@ -8,7 +8,7 @@ import app.util as util
 
 bp = Blueprint('menu', __name__, url_prefix='/menu')
 
-@bp.route('/index', methods=('GET', 'POST'))
+@bp.route('/', methods=('GET', 'POST'))
 def index():
     menu_data = util.get_menus_data()
     if request.method == 'POST':

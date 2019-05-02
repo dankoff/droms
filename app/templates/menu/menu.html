@@ -42,7 +42,6 @@
     </nav>
     {% endif %}
     {% for s, items in data.items() %}
-      {% if items %}
       <article class="item">
         <header>
           <div>
@@ -52,6 +51,7 @@
             <hr>
           </div>
         </header>
+        {% if items %}
         {% for i in items %}
         <div>
           {% if not g.user %}
@@ -77,8 +77,8 @@
           </nav>
         </div>
         {% endfor %}
+        {% endif %}
       </article>
-      {% endif %}
     {% endfor %}
     {% if not loop.last %}
       <hr>

@@ -9,6 +9,26 @@ DROP TABLE IF EXISTS workPlace;
 DROP TABLE IF EXISTS restaurant;
 DROP TABLE IF EXISTS communication;
 
+CREATE TABLE restaurant (
+  name TEXT PRIMARY KEY,
+  contact TEXT NOT NULL
+);
+
+INSERT INTO restaurant (name, contact)
+VALUES
+  ('my restaurant', 'my address');
+
+CREATE TABLE workPlace (
+  name TEXT PRIMARY KEY,
+  restName TEXT NOT NULL,
+  FOREIGN KEY (restName) REFERENCES restaurant (name)
+);
+
+INSERT INTO workPlace (name, restName)
+VALUES
+  ('Bar', 'my restaurant'),
+  ('Kitchen', 'my restaurant');
+
 CREATE TABLE staff (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT UNIQUE NOT NULL,
@@ -18,11 +38,10 @@ CREATE TABLE staff (
   FOREIGN KEY (workPlace) REFERENCES workPlace (name)
 );
 
-CREATE TABLE workPlace (
-  name TEXT PRIMARY KEY,
-  restName TEXT NOT NULL,
-  FOREIGN KEY (restName) REFERENCES restaurant (name)
-);
+INSERT INTO staff (username, password, type, workPlace)
+VALUES
+  ('manager', 'pbkdf2:sha256:50000$5EdxPGQv$40b05504c670d54d1a5d4c2ca6613606254f15dfc3fe6ae62c3eb105c251f537',
+   'Manager', 'Bar');
 
 CREATE TABLE communication (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -79,11 +98,6 @@ CREATE TABLE menu (
   FOREIGN KEY (restName) REFERENCES restaurant (name)
 );
 
-CREATE TABLE restaurant (
-  name TEXT PRIMARY KEY,
-  contact TEXT NOT NULL
-);
-
 CREATE TABLE restTable (
   tableNo INTEGER PRIMARY KEY AUTOINCREMENT,
   noOfSeats INTEGER NOT NULL,
@@ -92,3 +106,9 @@ CREATE TABLE restTable (
   restName TEXT NOT NULL,
   FOREIGN KEY (restName) REFERENCES restaurant (name)
 );
+
+INSERT INTO restTable (noOfSeats, seatsLeft, free, restName)
+VALUES
+  (4, 4, 1, 'my restaurant'),
+  (2, 2, 1, 'my restaurant'),
+  (6, 6, 1, 'my restaurant');

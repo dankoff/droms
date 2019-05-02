@@ -2,8 +2,8 @@
 Utility functions
 '''
 from app.db import get_db
-from werkzeug.exceptions import abort
 from datetime import date
+from flask import flash
 
 def get_menus_data():
     ''' returns a dict as described below
@@ -28,35 +28,13 @@ def get_menus_data():
             ret[m][s] = items
     return ret
 
-def get_all_sections():
-    ''' returns all section records from all menus '''
-    sections = get_db().execute(
-        'SELECT name, description, menu FROM section ORDER BY menu ASC'
-    ).fetchall()
-    if sections is None:
-        abort( 404, "No sections found" )
-    return sections
-
 def get_sections_by_menu(menu):
     ''' returns all section records given a menu '''
     sections = get_db().execute(
         'SELECT name, description FROM section WHERE menu=?',
         (menu,)
     ).fetchall()
-    if sections is None:
-        abort( 404, "No sections found for menu {0}".format(menu) )
     return sections
-
-def get_section_by_name_and_menu(name, menu):
-    ''' returns a section record given its name and menu '''
-    section = get_db().execute(
-        'SELECT name, description, menu FROM section'
-        ' WHERE name=? and menu=?',
-        (name, menu)
-    ).fetchone()
-    if section is None:
-        abort( 404, "Section {0} not found in {1}".format(name, menu) )
-    return section
 
 def get_items_by_section_and_menu(section, menu):
     ''' returns all item records given a section and menu '''
@@ -67,8 +45,6 @@ def get_items_by_section_and_menu(section, menu):
         ' ORDER BY cost ASC',
         (section, menu)
     ).fetchall()
-    if items is None:
-        abort( 404, "No items found in section {0}, {1}".format(section, menu) )
     return items
 
 def get_items_by_menu(menu):
@@ -77,27 +53,6 @@ def get_items_by_menu(menu):
         'SELECT id, name, description, cost, section, diet, spicy'
         ' FROM item WHERE menu=?', (menu,)
     ).fetchall()
-    if items is None:
-        abort( 404, "No items found in {0}".format(menu) )
-    return items
-
-def get_all_items():
-    ''' returns all item records '''
-    items = get_db().execute(
-        'SELECT id, name, description, cost, diet, spicy FROM item'
-    ).fetchall()
-    if items is None:
-        about( 404, "No items found" )
-    return items
-
-def get_items_by_diet(diet):
-    ''' returns all item records given a diet '''
-    items = get_db().execute(
-        'SELECT * FROM item WHERE diet=?',
-        (diet,)
-    ).fetchall()
-    if items is None:
-        abort(404, "No {0} items found".format(diet))
     return items
 
 def get_item_by_id(id):
@@ -107,7 +62,7 @@ def get_item_by_id(id):
         ' FROM item WHERE id=?', (id,)
     ).fetchone()
     if item is None:
-        abort(404, "Item {0} not found.".format(id))
+        flash( "Item {0} not found.".format(id) )
     return item
 
 def get_work_places():
@@ -115,8 +70,8 @@ def get_work_places():
     work_places = get_db().execute(
         'SELECT name FROM workPlace'
     ).fetchall()
-    if work_places is None:
-        abort( 404, "No work places found." )
+    if len(work_places) == 0:
+        flash( "No work places found." )
     return [ p['name'] for p in work_places ]
 
 def get_menus():
@@ -124,8 +79,8 @@ def get_menus():
     menus = get_db().execute(
         'SELECT name, description FROM menu'
     ).fetchall()
-    if menus is None:
-        abort( 404, "No menus found." )
+    if len(menus) == 0:
+        flash( "No menus found." )
     return menus
 
 def get_restaurants():
@@ -133,22 +88,9 @@ def get_restaurants():
     restaurants = get_db().execute(
         'SELECT * FROM restaurant'
     ).fetchall()
-    if restaurants is None:
-        abort( 404, "No restaurants exist." )
+    if len(restaurants) == 0:
+        flash( "No restaurants found." )
     return restaurants
-
-def get_all_orders():
-    ''' retrieves all orders '''
-    db = get_db()
-    orders = db.execute(
-        'SELECT orderId, tableNo, created, name, diet, spicy, quantity'
-        ' FROM orderDetail o'
-        ' JOIN item i ON o.itemId = i.id'
-        ' JOIN custOrder co ON o.orderId = co.id'
-    ).fetchall()
-    if orders is None:
-        abort( 404, "No orders found." )
-    return orders
 
 def get_orders_by_date(date=None):
     ''' retrieves all orders for the given date in the format yyyy-mm-dd '''
@@ -160,8 +102,6 @@ def get_orders_by_date(date=None):
             ' FROM custOrder'
             ' WHERE created LIKE ?', (date+'%',)
         ).fetchall()
-        if orders is None:
-            abort( 404, "No orders found." )
     return orders
 
 def get_order_by_id(id):
@@ -174,8 +114,6 @@ def get_order_by_id(id):
         ' JOIN custOrder co ON o.orderId = co.id'
         ' WHERE co.id=?', (id,)
     ).fetchall()
-    if order is None:
-        abort( 404, "No orders found." )
     return order
 
 def get_tables(restName):
@@ -186,8 +124,8 @@ def get_tables(restName):
         ' FROM restTable'
         ' WHERE restName=?', (restName,)
     ).fetchall()
-    if tables is None:
-        abort(404, "No tables found for restaurant {}".format(restName))
+    if len(tables) == 0:
+        flash( "No tables found for restaurant {}".format(restName) )
     return tables
 
 def edit_item(id, name, desc, cost, section, diet, spicy):

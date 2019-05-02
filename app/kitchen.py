@@ -6,7 +6,7 @@ from datetime import date
 from app.db import get_db
 from app.auth import login_required
 from app.util import (
-    get_all_orders, get_orders_by_date, get_order_by_id, complete_order,
+    get_orders_by_date, get_order_by_id, complete_order,
     save_message, get_last3_messages
 )
 
@@ -25,7 +25,7 @@ def completeOrder():
     msg = request.args.get('message', None)
     src = request.args.get('source', 'Kitchen', type=str)
     aDate = request.args.get('selDate', str(date.today()), type=str)
-    
+
     if id:
         complete_order(id)
     if msg:
@@ -59,7 +59,7 @@ def send_message():
     return jsonify(res)
 
 @bp.route('/home/messages')
-@login_required(types=['Cook', 'Waiter'])
+@login_required()
 def loadMessages():
     src = request.args.get('source', None)
     res = list()
