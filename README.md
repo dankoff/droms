@@ -78,4 +78,4 @@ If you want to see the coverage results in the browser, generate html files inst
 ```
 coverage html
 ```
-then open the chosen file inside the htmlcov/ in a browser
+then open the chosen file inside the **htmlcov** folder in a browser
