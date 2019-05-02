@@ -1,12 +1,16 @@
 # DROMS
-Distributed Restaurant and Order Management System built in Flask
+*Distributed Restaurant and Order Management System built in Flask*.
 
 ## How to install
+Clone the repository
 ```
-# clone the repository
 git clone https://github.com/dankoff/droms
 ```
-While inside the droms folder, create a virtual environment and activate it:
+Navigate to the *droms* folder
+```
+cd droms
+```
+Create a virtual environment and activate it:
 ```
 # Linux/Mac
 python3 -m venv venv
@@ -16,7 +20,6 @@ python3 -m venv venv
 py -3 -m venv venv
 venv\Scripts\activate.bat
 ```
-
 Install DROMS
 ```
 pip install -e .
@@ -51,6 +54,12 @@ flask run --host=0.0.0.0
 ```
 
 The app should now be running, open http://127.0.0.1:5000 in a browser to verify
+
+You will need a manager account to be able to log in - use the following credentials:
+```
+username: manager
+password: 123456
+```
 
 ## Test
 
