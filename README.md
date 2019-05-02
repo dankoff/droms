@@ -22,7 +22,7 @@ Install DROMS
 pip install -e .
 ```
 
-## How to run DROMS
+## How to run
 
 While still inside the virtual environment, type:
 ```
@@ -63,7 +63,6 @@ Run with coverage report:
 ```
 coverage run -m pytest
 coverage report
-coverage html
 ```
 
 If you want to see the coverage results in the browser, generate html files instead via:
