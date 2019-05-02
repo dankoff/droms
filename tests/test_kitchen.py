@@ -76,13 +76,9 @@ def test_ordersByDate(client, auth, order):
         assert json_data[0]['id'] == ord1['id']
         assert json_data[1]['id'] == ord2['id']
 
-@pytest.mark.parametrize(('url'), (
-    ('/kitchen/home/send_message'),
-    ('/kitchen/home/messages'),
-))
-def test_message_invalid_user(client, auth, url):
+def test_message_invalid_user(client, auth):
     auth.login('manager', '123456')
-    r = client.get(url)
+    r = client.get('/kitchen/home/messages')
     r.status_code == 302
     r.headers['Location'] == 'http://localhost/menu/'
 
